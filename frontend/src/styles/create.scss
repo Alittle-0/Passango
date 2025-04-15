@@ -1,0 +1,89 @@
+// src/styles/create.scss
+@import 'variables';
+@import 'mixins';
+
+#create {
+  .create-section {
+    min-height: 100vh;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10%;
+    background-color: #333333;
+    .upload-box {
+    
+      border: 2px dashed rgb(179, 179, 179);
+      padding: 1.5rem;
+      margin: 0 auto;
+      max-width: 500px;
+      background-color: transparent;
+      p {
+        margin-bottom: 0.5rem;
+        color: white;
+        font-size: 0.9rem;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        input  {
+          padding: 1rem;
+          border: 1px solid ;
+          border-radius: 0.25rem;
+          color: white;
+          text-align: center;
+          &::-webkit-file-upload-button {
+            background-color: black;
+            color: #b1a480;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            margin-right: 5%;
+            &:hover {
+              background-color: white;
+              color: black;
+              transform: scale(1.02);
+            }
+          }
+        }
+
+        button {
+          margin-top: 40px;;
+          background-color: black;
+          color: #b1a480;
+          padding: 20px 30px;
+          border: none;
+          font-size: 1.9rem;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all 0.7s ease;
+          &:hover {
+            background-color: gray;
+            color:black;
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+  }
+}@media(max-width: 768px){
+  #create {
+    .create-section {
+      padding: 50% 10% 10% 10%;
+      .upload-box {
+        max-width: 100%;
+        form {
+          input {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

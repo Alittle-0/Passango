@@ -1,0 +1,126 @@
+// src/styles/inside.scss
+@import 'variables';
+.top_inside {
+  display: flex;
+  min-height: 100vh;
+  padding: 5% 10%; // Reduced padding for better balance
+  background-color: #202020;
+  color: #cbbd9b;
+  
+  .quote_inside {
+    margin-top: 5%;
+    padding-top: 10%; // Reduced padding-top
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; // Changed to fixed value for consistency
+    text-align: center;
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .img_inside {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    img {
+      align-self: center;
+      width: 90%; // Fixed double semicolon
+      height: auto;
+      border-radius: 10px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 10% 5%; // Adjusted padding for mobile
+    gap: 20px; // Fixed gap value
+
+    .quote_inside {
+      padding-top: 34%; // Reduced padding-top for mobile
+      width: 100%;
+      gap: 15px; // Slightly smaller gap for mobile
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-size: 0.8rem;
+      }
+    }
+
+    .img_inside {
+      width: 100%;
+
+      img {
+        width: 70%;
+        height: auto;
+        border-radius: 10px;
+      }
+    }
+  }
+}
+//reason of creation
+.Reason-of-creation {
+  min-height: 100vh;
+  background-color: #121212;
+  color: #cbbd9b;
+  padding: 9%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+
+  section {
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 800px;
+    width: 100%;
+    background: linear-gradient(145deg, #1a1a1a, #0e0e0e);
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 
+      8px 8px 15px rgba(0, 0, 0, 0.5),
+      -8px -8px 15px rgba(40, 40, 40, 0.2);
+    position: relative;
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg); // Start flat, JS will handle tilt
+    transition: transform 0.2s ease; // Smooth transition for tilting
+
+    &:hover {
+      box-shadow: 
+        10px 10px 20px rgba(0, 0, 0, 0.6),
+        -10px -10px 20px rgba(40, 40, 40, 0.3);
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 9% 5%;
+    min-height: 70vh;
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    section {
+      font-size: 0.8rem;
+      padding: 20px;
+      max-width: 100%;
+    }
+  }
+}

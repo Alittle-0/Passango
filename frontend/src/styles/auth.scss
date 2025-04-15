@@ -1,0 +1,210 @@
+// Variables
+$primary-color: #4CAF50;
+$primary-hover: #45a049;
+$error-color: #dc3545;
+$success-color: #28a745;
+$border-radius: 4px;
+$transition: all 0.3s ease;
+$shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+// Auth Container
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background-color: #f5f5f5;
+
+    @media (max-width: 768px) {
+        padding: 1rem;
+    }
+}
+
+// Auth Form
+.auth-form {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background: white;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: $border-radius;
+            transition: $transition;
+
+            &:focus {
+                outline: none;
+                border-color: $primary-color;
+                box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+            }
+
+            &.error {
+                border-color: $error-color;
+            }
+        }
+
+        .error-message {
+            color: $error-color;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    }
+
+    .password-strength {
+        margin-top: 0.5rem;
+        height: 4px;
+        background-color: #ddd;
+        border-radius: 2px;
+        overflow: hidden;
+
+        &-bar {
+            height: 100%;
+            transition: $transition;
+            width: 0;
+
+            &.weak { 
+                width: 25%; 
+                background-color: $error-color;
+            }
+            &.medium { 
+                width: 50%; 
+                background-color: #ffc107;
+            }
+            &.strong { 
+                width: 75%; 
+                background-color: #17a2b8;
+            }
+            &.very-strong { 
+                width: 100%; 
+                background-color: $success-color;
+            }
+        }
+    }
+
+    .form-footer {
+        margin-top: 1.5rem;
+        text-align: center;
+
+        a {
+            color: $primary-color;
+            text-decoration: none;
+            transition: $transition;
+
+            &:hover {
+                color: $primary-hover;
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+// Buttons
+.auth-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-weight: 500;
+    transition: $transition;
+
+    &:hover {
+        background-color: $primary-hover;
+    }
+
+    &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+}
+
+// Messages
+.message {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: $border-radius;
+    text-align: center;
+
+    &-success {
+        background-color: rgba($success-color, 0.1);
+        color: $success-color;
+        border: 1px solid rgba($success-color, 0.2);
+    }
+
+    &-error {
+        background-color: rgba($error-color, 0.1);
+        color: $error-color;
+        border: 1px solid rgba($error-color, 0.2);
+    }
+}
+
+// Social Auth
+.social-auth {
+    margin-top: 1.5rem;
+    text-align: center;
+
+    &-divider {
+        display: flex;
+        align-items: center;
+        margin: 1rem 0;
+        color: #666;
+
+        &::before,
+        &::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        span {
+            padding: 0 1rem;
+        }
+    }
+
+    &-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+
+        button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: $border-radius;
+            background: white;
+            cursor: pointer;
+            transition: $transition;
+
+            &:hover {
+                background-color: #f5f5f5;
+            }
+
+            img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+}

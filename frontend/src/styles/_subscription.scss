@@ -1,0 +1,41 @@
+// src/styles/_subscription.scss
+@import 'variables';
+@import 'mixins';
+
+.subscription {
+  padding: 50px 20px;
+  text-align: center;
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    input {
+      padding: 10px;
+      width: 300px;
+      border: 1px solid $light-gray;
+    }
+
+    button {
+      background-color: $black;
+      color: $white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    @include respond-to($mobile) {
+      flex-direction: column;
+
+      input {
+        width: 100%;
+      }
+    }
+  }
+}
