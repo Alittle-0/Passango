@@ -1,0 +1,140 @@
+// Container for the entire page
+.container_forgot {
+  
+    display: flex;
+    min-height: 100vh;
+    background-color: rgb(30, 30, 30); // Dark background matching the left side of the image
+  }
+  .forgot_pic{
+    width: 50%;
+    
+    img{
+      padding-top: 50px;
+      width: 100%;
+      align-self: center;
+    }
+  }
+  // Form section (right side in the image)
+  .form-section_forgot {
+    
+    background-color: #fff; // White background for the form section
+    width: 50%;
+    margin-left: auto; // Align to the right
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 70px 40px 40px 40px;
+    
+    min-height: 100vh;
+  }
+  
+  // Logo styling
+  .logo {
+
+    align-items: center;
+   h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #000;
+  }
+}
+  
+  // Form wrapper
+  .form-wrapper {
+    max-width: 400px;
+    width: 100%;
+    
+    h2 {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #000;
+    }
+    
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+
+      }
+      
+      input {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f5f7fa; // Light gray background for input
+        color: #333;
+        
+        &:focus {
+          outline: none;
+          border-color: #ff6200; // Orange border on focus
+          background-color: #fff;
+        }
+        
+        &::placeholder {
+          color: #999;
+        }
+      }
+      
+      // Button styling
+      .button_forgot {
+        background-color: black;
+        color: #ffffff;
+        padding: 20px 30px;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        border-radius:  50px; ;
+        transition: all 0.7s ease;
+      }
+      button:hover {
+        background-color: gray;
+        color: black;
+        transform: scale(1.05);
+      }
+      
+      
+      p {
+        text-align: center;
+        margin-top: 10px;
+        
+        a {
+          color: #ff6200; // Orange link color
+          text-decoration: none;
+          font-weight: 500;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .container_forgot {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 20px;
+    }
+    .forgot_pic{
+      width: 100%;
+    }
+    .form-section_forgot {
+      width: 100%;
+      padding: 20px;;
+    }
+
+  }

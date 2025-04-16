@@ -1,0 +1,23 @@
+// src/styles/_variables.scss
+$primary-color: #000000; // Black for buttons
+$secondary-color: #666666; // Gray for muted text
+$background-color: #ffffff; // White background
+$card-background: #ffffff; // White cards
+$text-color: #000000; // Black text
+$muted-text-color: #666666; // Gray for muted text
+$border-color: #e0e0e0; // Light gray border
+$hover-darken: 10%;
+$font-family: 'Helvetica', 'Arial', sans-serif;
+$font-family-serif: 'Times New Roman', serif; // For "PassanGo" on homepage
+$font-size-base: 1rem;
+$spacing-unit: 1rem;
+// Colors
+$black: #000;
+$white: #fff;
+$gray: #333;
+$light-gray: #ccc;
+$beige: #f5e9d4;
+$orange: #ff4500;
+
+// Breakpoints
+$mobile: 768px;

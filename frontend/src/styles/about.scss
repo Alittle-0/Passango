@@ -1,0 +1,101 @@
+// Homepage distribution
+.homepage {
+  display: flex;
+  flex-direction: column;
+
+}
+
+// About section
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: 20vh;
+  padding: 50px 20px;
+  background-color: black;
+  min-height: 100vh;
+  color: white;
+  align-items: center;
+
+  .pictures {
+    width: 100%; // Increased width to accommodate 5 images
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+
+    .face {
+      width: 15%; // Reduced size to fit 5 images
+      height: 15%;
+    }
+
+    // Positioning and diagonal cuts for 5 images
+    .face-1 {
+      clip-path: polygon(0 0, 70% 0, 30% 100%, 0 100%);
+      left: 0;
+      top: 0;
+    }
+
+    .face-2 {
+      clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+      left: 0px; 
+      top: 0;
+    }
+
+    .face-3 {
+      clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+      left: 0; 
+      top: 0;
+      margin-left: 5%;
+      margin-right: 5%;
+    }
+
+    .face-4 {
+      clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+      left: 0; 
+      top: 0;
+    }
+
+    .face-5 {
+      clip-path: polygon(70% 0, 100% 0, 100% 100%, 30% 100%);
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .about_content {
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+  }
+
+  // Media query for screens with max-width of 768px
+  @media (max-width: 768px) {
+    padding: 30px 10px;
+    gap: 25vh;
+    .pictures{
+      padding-top:30%;
+    }
+    
+
+    .about_content {
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+      }
+
+      p {
+        font-size: 1rem;
+        max-width: 90%;
+      }
+    }
+  }
+}
