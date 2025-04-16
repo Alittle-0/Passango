@@ -1,34 +1,53 @@
+.search-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 20vw; /* Full width of parent */
+  box-sizing: border-box;
+}
+
 .search {
   position: relative;
   display: flex;
   align-items: center;
-  width: 300px;
+  width: 100%; /* Scales with parent (form/window) */
+  max-width: 500px; /* Maximum width */
+  background: #ffffff;
+  border: 1px solid #fff;
+  transition: all 0.3s ease; /* Smooth scaling for width and padding */
+
+  .search-input {
+    flex: 1; /* Takes remaining space */
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: #000000;
+    font-size: 1rem;
+    outline: none;
+    transition: opacity 0.3s, padding 0.3s;
+
+    &::placeholder {
+      color: #000000;
+    }
+
+    &:focus {
+      border-color: #fff;
+    }
+  }
 
   .search-icon {
     position: absolute;
-    left: 10px;
+    right: 10px;
     cursor: pointer;
+    z-index: 1;
     img {
       width: 20px;
       height: 20px;
       transition: opacity 0.2s;
     }
     img:hover {
-      opacity: 0.8; 
-    }
-  }
-
-  .search-input {
-    width: 100%;
-    padding: 10px 10px 10px 40px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s;
-
-    &:focus {
-      border-color: #007bff;
+      opacity: 0.8;
     }
   }
 
@@ -37,10 +56,10 @@
     top: 100%;
     left: 0;
     right: 0;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    border: 1px solid #fff;
+    border-radius: 0; /* Square corners */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     max-height: 200px;
     overflow-y: auto;
     list-style: none;
@@ -49,22 +68,20 @@
     z-index: 10;
 
     .suggestion-item {
-      display: flex;
-      align-items: center;
       padding: 10px;
+      color: #fff;
       cursor: pointer;
       transition: background-color 0.2s;
 
       &:hover {
-        background: #f5f5f5;
-      }
-
-      .suggestion-image {
-        width: 32px;
-        height: 32px;
-        margin-right: 10px;
-        border-radius: 4px;
+        background-color: #d3d3d3;
       }
     }
+  }
+}
+
+@media(max-width:768px){
+  .search-form{
+    width:50% ;
   }
 }
