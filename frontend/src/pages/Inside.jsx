@@ -6,7 +6,7 @@ import Featured from '../components/Featured';
 
 
 function Inside() {
-  const [user, setUser] = useState(null);
+  var [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -21,6 +21,7 @@ function Inside() {
           const data = await response.json();
           if (response.ok) {
             setUser(data);
+            user=localStorage.getItem(data);
           } else {
             localStorage.removeItem('token');
             localStorage.removeItem('user');

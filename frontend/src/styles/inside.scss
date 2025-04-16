@@ -9,11 +9,10 @@
   
   .quote_inside {
     margin-top: 5%;
-    padding-top: 10%; // Reduced padding-top
+    padding-top: 10%; 
     display: flex;
     width: 50%;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap;
     gap: 20px; // Changed to fixed value for consistency
     text-align: center;
 
@@ -23,6 +22,7 @@
 
     p {
       font-size: 1rem;
+      align-self: flex-start;
     }
   }
 
