@@ -12,18 +12,16 @@
     padding-top: 10%; 
     display: flex;
     width: 50%;
-    flex-wrap: wrap;
-    gap: 20px; // Changed to fixed value for consistency
-    text-align: center;
-
+    gap:30px;
+    flex-direction: column;
     h2 {
       font-size: 2rem;
     }
 
     p {
       font-size: 1rem;
-      align-self: flex-start;
-    }
+      text-align: left; 
+     }
   }
 
   .img_inside {
