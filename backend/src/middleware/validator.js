@@ -1,4 +1,4 @@
-const { validationResult } = require('express-validator');
+import { validationResult } from 'express-validator';
 
 const validate = (validations) => {
     return async (req, res, next) => {
@@ -21,4 +21,20 @@ const validate = (validations) => {
     };
 };
 
-module.exports = validate; 
+export default validate;
+
+/*
+What express-validator Does
+Provides validation middleware for Express routes
+Offers functions to validate different types of data (emails, passwords, numbers, etc.)
+Handles sanitization of user input
+Allows you to create validation chains and custom validation logic
+Your validator.js Middleware
+Your validator.js file is a wrapper around express-validator that:
+
+Takes an array of validation rules
+Runs all validations against the request
+Collects any validation errors
+Either passes control to the next middleware (if validation passes)
+Or returns a formatted error response (if validation fails)
+*/
