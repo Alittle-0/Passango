@@ -1,6 +1,5 @@
-const userService = require('../services/UserService');
-const { validationResult } = require('express-validator');
-
+import {userService} from '../services/UserService.js';
+import { validationResult } from 'express-validator';
 class UserController {
     async register(req, res) {
         try {
@@ -86,4 +85,4 @@ class UserController {
     }
 }
 
-module.exports = new UserController(); 
+export default new UserController();

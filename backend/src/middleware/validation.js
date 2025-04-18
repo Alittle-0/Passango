@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from 'express-validator';
 
 const validateForgotPassword = [
     body('email')
@@ -32,8 +32,17 @@ const validate = (req, res, next) => {
     next();
 };
 
-module.exports = {
-    validateForgotPassword,
-    validateResetPassword,
-    validate
-}; 
+export { validateForgotPassword, validateResetPassword, validate };
+export default validate;
+
+/*
+Defines validation rules for password reset flows:
+
+validateForgotPassword: Ensures email is valid
+validateResetPassword: Validates email, verification code (must be 6 digits), and new password (must meet complexity requirements)
+Provides a generic validation middleware function that:
+
+Collects validation errors from request
+Returns 400 status with error details if validation fails
+Calls next() to proceed if validation passes
+*/

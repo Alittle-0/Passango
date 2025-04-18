@@ -1,8 +1,8 @@
-const User = require('../models/User');
-const { sendEmail } = require('../utils/emailCommon');
-const { verificationCodeTemplate } = require('../utils/emailTemplatesCommon');
-const { generateVerificationCode, storeVerificationCode, verifyCode } = require('../utils/verificationCode');
-const bcrypt = require('bcryptjs');
+import User from '../models/User.js';
+import { sendEmail } from '../utils/emailCommon.js';
+import { verificationCodeTemplate } from '../utils/emailTemplatesCommon.js';
+import { generateVerificationCode, storeVerificationCode, verifyCode } from '../utils/verificationCode.js';
+import bcrypt from 'bcryptjs';
 
 class AuthController {
     // ... existing methods ...
@@ -102,4 +102,5 @@ class AuthController {
     }
 }
 
-module.exports = new AuthController();
+const authController = new AuthController();
+export default authController;

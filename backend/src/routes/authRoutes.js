@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const AuthController = require('../controllers/AuthController');
-const { validateForgotPassword, validateResetPassword } = require('../middleware/validation');
-const { verificationCodeLimiter, resetPasswordLimiter } = require('../middleware/rateLimit');
+import express from 'express';
+import AuthController from '../controllers/AuthController.js';
+import { validateForgotPassword, validateResetPassword } from '../middleware/validation.js';
+import { verificationCodeLimiter, resetPasswordLimiter } from '../middleware/rateLimit.js';
+import { refreshToken } from '../middleware/auth.js';
 
-// ... existing routes ...
+const router = express.Router();
 
 // Password reset routes
 router.post('/forgot-password', 
@@ -24,4 +24,16 @@ router.post('/reset-password',
     AuthController.resetPassword
 );
 
-module.exports = router; 
+// Add refresh token route
+router.post('/refresh-token', refreshToken);
+
+export default router;
+
+/*
+File Purpose
+This file creates Express routes for password reset flow:
+
+/forgot-password: Request to initiate password reset
+/verify-code: Verify a reset code sent to the user's email
+/reset-password: Complete password reset with new password
+*/

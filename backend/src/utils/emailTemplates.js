@@ -283,3 +283,14 @@ export const verificationCodeTemplate = (userName, code) => `
     </body>
     </html>
 `; 
+
+/*
+The emailTemplates.js file contains HTML templates with styling for various email types:
+
+Password reset emails
+Password changed notifications
+Suspicious activity alerts
+Welcome emails
+Account deletion confirmations
+Verification code emails
+*/
