@@ -1,6 +1,6 @@
 import express from 'express';
 import PasswordService from '../services/PasswordService.js';
-import { authMiddleware } from '../middleware/authMiddleware.js';
+import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 

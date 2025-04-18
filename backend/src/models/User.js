@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -61,7 +61,36 @@ const UserSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Modify toJSON method to include avatar
+// Pre-save middleware to hash password
+UserSchema.pre('save', async function(next) {
+    if (!this.isModified('password')) {
+        return next();
+    }
+    
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Method to compare password for login
+UserSchema.methods.matchPassword = async function(enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Method to generate JWT token
+UserSchema.methods.generateAuthToken = function() {
+    return jwt.sign(
+        { id: this._id, role: this.role },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+    );
+};
+
+// Method to customize JSON output (remove sensitive fields)
 UserSchema.methods.toJSON = function() {
     const obj = this.toObject();
     delete obj.password;
@@ -71,7 +100,10 @@ UserSchema.methods.toJSON = function() {
     delete obj.emailVerificationExpire;
     delete obj.loginAttempts;
     delete obj.lockUntil;
+    delete obj.__v;
     return obj;
 };
 
-module.exports = mongoose.model('User', UserSchema); 
+const User = mongoose.model('User', UserSchema);
+
+export default User;

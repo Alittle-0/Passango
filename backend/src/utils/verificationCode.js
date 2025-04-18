@@ -1,14 +1,14 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 // Store verification codes in memory (in production, use Redis)
 const verificationCodes = new Map();
 
-const generateVerificationCode = () => {
+export const generateVerificationCode = () => {
     // Generate a 6-digit random number
     return crypto.randomInt(100000, 999999).toString();
 };
 
-const storeVerificationCode = (email, code) => {
+export const storeVerificationCode = (email, code) => {
     // Store code with 10-minute expiration
     verificationCodes.set(email, {
         code,
@@ -16,7 +16,7 @@ const storeVerificationCode = (email, code) => {
     });
 };
 
-const verifyCode = (email, code) => {
+export const verifyCode = (email, code) => {
     const stored = verificationCodes.get(email);
     
     if (!stored) {
@@ -36,9 +36,3 @@ const verifyCode = (email, code) => {
     verificationCodes.delete(email);
     return { valid: true };
 };
-
-module.exports = {
-    generateVerificationCode,
-    storeVerificationCode,
-    verifyCode
-}; 

@@ -32,3 +32,7 @@ export const loginLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false
 }); 
+
+//Limiting password reset requests to 3 per IP address every 15 minutes
+//Limiting login attempts to 5 per IP address every hour
+//Using Redis to store rate limit information (which persists across server restarts)

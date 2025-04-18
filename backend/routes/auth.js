@@ -1,9 +1,9 @@
 // routes/auth.js
 import express from 'express';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs'; // Changed from 'bcrypt' to 'bcryptjs'
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import User from '../models/User.js';
+import User from '../models/user.js';
 import authMiddleware from '../middleware/auth.js';
 
 const router = express.Router();
