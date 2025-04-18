@@ -35,8 +35,10 @@ class Lyric:
         """Scrape and return the lyric from AZLyrics."""
         try:
             # Fetch the webpage
+            print(self.url())
             response = requests.get(self.url(), timeout=100)
             if not response.ok:
+                print(self.url())
                 return f"Failed to fetch lyric. Status code: {response.status_code}"
             else:
                 lyric = self._scrape_lyric_(response)

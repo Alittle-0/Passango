@@ -10,7 +10,7 @@ def main():
     
     if not lyric.startswith("Error") and not lyric.startswith("Failed") and lyric != "No lyric found.":
         # Assuming basic.html is in the same directory
-        html_path = "basic.html"
+        html_path = "Transcription_byPhiHung/basic.html"
         html(html_path, lyric, song, artist)
     else:
         print(lyric)
