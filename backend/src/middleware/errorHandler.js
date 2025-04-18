@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 const errorHandler = (err, req, res, next) => {
     console.error(err.stack);
 
@@ -22,6 +23,31 @@ const errorHandler = (err, req, res, next) => {
                 field: e.path,
                 message: e.message
             }))
+        });
+    }
+
+    // Add Mongoose validation error handler
+    if (err.name === 'ValidationError') {
+        return res.status(400).json({
+            success: false,
+            error: 'Validation Error',
+            details: Object.values(err.errors).map(e => ({
+                field: e.path,
+                message: e.message
+            }))
+        });
+    }
+
+    // Add Mongoose duplicate key error handler
+    if (err.code === 11000) {
+        const field = Object.keys(err.keyValue)[0];
+        return res.status(409).json({
+            success: false,
+            error: 'Duplicate Entry',
+            details: [{
+                field,
+                message: `${field} already exists`
+            }]
         });
     }
 
@@ -59,4 +85,12 @@ const errorHandler = (err, req, res, next) => {
     });
 };
 
-module.exports = errorHandler; 
+export default errorHandler;
+
+/*
+The errorHandler.js file is an Express error handling middleware that:
+
+Centralizes error handling for your entire application
+Formats error responses consistently for your API
+Handles specific error types 
+*/

@@ -3,6 +3,8 @@ import PasswordResetToken from '../models/PasswordResetToken.js';
 import { generateToken } from '../utils/jwt.js';
 import { sendEmail } from '../utils/email.js';
 import bcrypt from 'bcryptjs';
+import { generateVerificationCode, storeVerificationCode, verifyCode } from '../utils/verificationCode.js';
+import { passwordResetTemplate } from '../utils/emailTemplates.js';
 
 class PasswordService {
     async requestPasswordReset(email) {
@@ -13,34 +15,46 @@ class PasswordService {
                 throw new Error('User not found');
             }
 
-            // Generate reset token
-            const token = generateToken({ id: user._id }, '1h');
+            // Generate verification code
+            const code = generateVerificationCode();
             
-            // Create password reset token
-            const resetToken = await PasswordResetToken.create({
-                userId: user._id,
-                token
-            });
+            // Store the code
+            storeVerificationCode(email, code);
 
-            // Send reset email
-            const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+            // Send reset email with code
             await sendEmail({
                 to: user.email,
-                subject: 'Password Reset Request',
+                subject: 'Password Reset Verification Code',
                 html: `
-                    <h1>Password Reset Request</h1>
+                    <h1>Password Reset Verification</h1>
                     <p>You requested a password reset for your PassanGo account.</p>
-                    <p>Click the link below to reset your password:</p>
-                    <a href="${resetUrl}">Reset Password</a>
-                    <p>This link will expire in 1 hour.</p>
+                    <p>Your verification code is:</p>
+                    <h2 style="font-size: 28px; letter-spacing: 5px; padding: 10px; background-color: #f5f5f5; text-align: center;">${code}</h2>
+                    <p>This code will expire in 10 minutes.</p>
                     <p>If you didn't request this, please ignore this email.</p>
                 `
             });
 
-            return { message: 'Password reset email sent' };
+            return { message: 'Password reset verification code sent' };
         } catch (error) {
             throw error;
         }
+    }
+
+    async verifyResetCode(email, code) {
+        const result = verifyCode(email, code);
+        if (result.valid) {
+            // Generate temporary token for password reset
+            const user = await User.findOne({ email });
+            const token = generateToken({ id: user._id }, '10m');
+            
+            return { 
+                valid: true,
+                token,
+                message: 'Verification successful' 
+            };
+        }
+        return result;
     }
 
     async resetPassword(token, newPassword) {
@@ -98,4 +112,4 @@ class PasswordService {
     }
 }
 
-export default new PasswordService(); 
+export default new PasswordService();
