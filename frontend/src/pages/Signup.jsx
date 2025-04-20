@@ -1,6 +1,7 @@
 // src/pages/Signup.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion'; // Added for animations
 
 function Signup() {
   const navigate = useNavigate();
@@ -87,9 +88,39 @@ function Signup() {
       setError(err.message);
     }
   };
+  // Animation variants for page transitions
+  const pageVariants = {
+    initial: {
+      opacity: 0,
+      x: '100%', // Slide in from right
+    },
+    animate: {
+      opacity: 1,
+      x: 0, // Slide to center
+      transition: {
+        duration: 0.7,
+        ease: 'easeOut',
+      },
+    },
+    exit: {
+      opacity: 0,
+      x: '-100%', // Slide out to left
+      transition: {
+        duration: 0.5,
+        ease: 'easeIn',
+      },
+    },
+  };
 
   return (
-    <div className="container_signup">
+    // Wrap the container in motion.div for animation
+    <motion.div
+      className="container_signup"
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       <div className="form-section_signup">
         <div className="logo_signup">
           <span>♪</span> PassanGo
@@ -147,7 +178,7 @@ function Signup() {
         </div>
       </div>
       <div className="image-section_signup"></div>
-    </div>
+    </motion.div>
   );
 }
 
