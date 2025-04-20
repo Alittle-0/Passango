@@ -41,15 +41,12 @@ router.post('/signup', async (req, res) => {
       });
     }
 
-    console.log('Generating salt and hashing password');
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
     console.log('Creating new user');
+    // Remove manual password hashing - let the mongoose pre-save hook handle it
     const user = new User({
       email,
       username,
-      password: hashedPassword,
+      password, // Use plain password - it will be hashed by the pre-save hook
     });
     await user.save();
 
@@ -94,7 +91,9 @@ router.post('/login', async (req, res) => {
       console.log('User password is undefined');
       return res.status(500).json({ message: 'User password is not set' });
     }
-    const isMatch = await bcrypt.compare(password, user.password);
+    
+    // Use the comparePassword method from the user model instead of direct bcrypt compare
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       console.log('Password does not match');
       return res.status(400).json({ message: 'Invalid credentials' });
@@ -157,8 +156,8 @@ router.put('/profile', authMiddleware, async (req, res) => {
     }
 
     if (password) {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
+      // Let pre-save hook handle password hashing
+      user.password = password;
     }
 
     await user.save();
@@ -222,9 +221,8 @@ router.post('/reset-password', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Update the password
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(newPassword, salt);
+    // Update the password - use pre-save hook for hashing
+    user.password = newPassword;
     await user.save();
 
     res.status(200).json({ message: 'Password reset successfully' });

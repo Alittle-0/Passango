@@ -8,7 +8,7 @@
   color: #cbbd9b;
   
   .quote_inside {
-    margin-top: 5%;
+    //margin-top: 5%;
     padding-top: 10%; 
     display: flex;
     width: 50%;
@@ -22,7 +22,7 @@
 
     p {
       font-size: 1rem;
-      align-self: flex-start;
+      text-align: left;;
     }
   }
 

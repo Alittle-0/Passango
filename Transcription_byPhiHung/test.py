@@ -47,22 +47,39 @@ class Lyric:
     def _scrape_lyric_(self, r: Response) -> str:
         r.encoding = 'utf-8'
         dom = BeautifulSoup(r.text, "html.parser")
-        body = dom.body
-        divs = body.find_all("div", {"class": "col-xs-12 col-lg-8 text-center"})[0]
         
-        target = {0:0}
-        
-        for i, d in enumerate(divs):
-            try:
-                query = d.find_all("br")
-                n_br = len(query)
-                if n_br > list(target.values())[0]:
-                    target = {i:n_br}
-            except:
-                pass
-        
-        target = list(target.keys())[0]
-        lyric = list(divs.children)[target].text
-        
-        return lyric
+        # Updated selector to match current AZLyrics structure
+        # The lyrics are typically in a div without a class but after specific comment markers
+        try:
+            # Look for the lyrics div - it's usually between specific comment markers
+            lyrics_divs = dom.find_all("div", class_=None)
+            
+            for div in lyrics_divs:
+                # Check if this is the lyrics div - it's usually preceded by comments
+                prev = div.previous_sibling
+                if prev and isinstance(prev, str) and "Usage of azlyrics.com content" in prev:
+                    # Clean and return lyrics
+                    lyrics = div.get_text().strip()
+                    return lyrics
+            
+            # Alternative method - try to find the lyrics container
+            content_div = dom.find("div", class_="ringtone")
+            if content_div:
+                lyrics_div = content_div.find_next("div")
+                if lyrics_div:
+                    lyrics = lyrics_div.get_text().strip()
+                    return lyrics
+                
+            # If still not found, try another common pattern
+            main_div = dom.find("div", class_="main-page")
+            if main_div:
+                lyrics_divs = main_div.find_all("div")
+                for div in lyrics_divs:
+                    if div.get_text().strip() and not div.get("class"):
+                        return div.get_text().strip()
+            
+            return "No lyric found."
+            
+        except Exception as e:
+            return f"Error parsing lyric: {e}"
 #################################################################################
