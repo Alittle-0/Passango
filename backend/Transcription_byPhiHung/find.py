@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import re
 from Vietnamese import INVALID_CHARACTERS, VIETNAMESE_DIACRITIC_MAP
 
-
 def find_artist_by_song(song_name: str) -> str:
     # Format song name for search URL (lowercase, remove special chars)
     song_query = song_name.lower().replace(" ", "+")
