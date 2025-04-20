@@ -23,7 +23,8 @@ dotenv.config({ path: envPath });
 // Debug: Log environment variables to ensure they are loaded
 console.log('MONGO_URI:', process.env.MONGO_URI);
 console.log('JWT_SECRET:', process.env.JWT_SECRET);
-console.log('PORT:', process.env.PORT);
+console.log('NODE_PORT:', process.env.NODE_PORT);
+console.log('PYTHON_PORT:', process.env.PYTHON_PORT);
 
 // Check if MONGO_URI is defined
 if (!process.env.MONGO_URI) {
@@ -72,7 +73,7 @@ mongoose
   .catch((err) => console.error('MongoDB connection error:', err));
 
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.NODE_PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -1,8 +1,15 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from test import Lyric
-import os
 import sys
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv('../../.env')
+
+
+    # Load configuration from .env file
+    config = dotenv_values('../../.env')
 
 app = Flask(__name__)
 CORS(app)
@@ -40,4 +47,6 @@ def get_lyrics():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    # Read PORT from .env, default to 8000 if not found
+    port = int(config.get('PYTHON_PORT', 8000))
+    app.run(host='0.0.0.0', port=port)
