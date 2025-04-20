@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react';
+// src/pages/Template.jsx
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 function Template() {
   const location = useLocation();
   const { lyrics, song, artist } = location.state || {};
+  const [progress, setProgress] = useState(0); // Track progress for the slider
+  const [isPaused, setIsPaused] = useState(false); // Track paused state for UI
+  const animatorRef = useRef(null); // Store the ParagraphAnimator instance
 
   useEffect(() => {
     if (!lyrics) return;
 
-    // ParagraphAnimator class from basic.html
     class ParagraphAnimator {
-      constructor(paragraph, index) {
+      constructor(paragraph, index, setProgressCallback) {
         this.paragraph = paragraph;
         this.container = document.createElement('div');
         this.container.className = 'paragraph-container';
@@ -23,6 +26,8 @@ function Template() {
         this.baseTransition = 700;
         this.tempo = 1.0;
         this.averageLength = 30;
+        this.setProgressCallback = setProgressCallback; // Callback to update progress
+        this.isPaused = false; // Track paused state
         this.init();
       }
 
@@ -56,6 +61,8 @@ function Template() {
       }
 
       updateDisplay() {
+        if (this.isPaused) return;
+
         const currentSentence = this.sentences[this.currentIndex] || '';
         const interval = this.calculateInterval(currentSentence);
         const transitionDuration = this.calculateTransitionDuration(interval);
@@ -79,21 +86,56 @@ function Template() {
           }
         });
 
+        // Update progress for the slider
+        const progressPercentage = (this.currentIndex / (this.sentences.length - 1)) * 100;
+        this.setProgressCallback(progressPercentage);
+
         clearTimeout(this.nextTimeout);
         this.nextTimeout = setTimeout(() => {
           if (this.currentIndex < this.sentences.length - 1) {
             this.currentIndex++;
             this.updateDisplay();
+          } else {
+            this.setProgressCallback(100); // Ensure progress reaches 100% at the end
           }
         }, interval);
+      }
+
+      // Replay the animation from the beginning
+      replay() {
+        this.currentIndex = 0;
+        this.isPaused = false;
+        this.updateDisplay();
+      }
+
+      // Seek to a specific point in the animation based on progress (0 to 100)
+      seek(progress) {
+        this.isPaused = false;
+        const targetIndex = Math.round((progress / 100) * (this.sentences.length - 1));
+        this.currentIndex = Math.min(Math.max(targetIndex, 0), this.sentences.length - 1);
+        this.updateDisplay();
+      }
+
+      // Pause the animation
+      pause() {
+        this.isPaused = true;
+        clearTimeout(this.nextTimeout);
+      }
+
+      // Resume the animation
+      resume() {
+        if (this.isPaused) {
+          this.isPaused = false;
+          this.updateDisplay();
+        }
       }
     }
 
     // Initialize animation
     const lyricContainer = document.querySelector('.lyric-script p');
     if (lyricContainer && lyrics) {
-        lyricContainer.textContent = lyrics;
-      new ParagraphAnimator(lyricContainer, 0);
+      lyricContainer.textContent = lyrics;
+      animatorRef.current = new ParagraphAnimator(lyricContainer, 0, setProgress);
     }
 
     return () => {
@@ -101,81 +143,77 @@ function Template() {
     };
   }, [lyrics]);
 
+  // Handle replay button click
+  const handleReplay = () => {
+    if (animatorRef.current) {
+      animatorRef.current.replay();
+      setIsPaused(false);
+    }
+  };
+
+  // Handle pause button click
+  const handlePause = () => {
+    if (animatorRef.current) {
+      animatorRef.current.pause();
+      setIsPaused(true);
+    }
+  };
+
+  // Handle continue button click
+  const handleContinue = () => {
+    if (animatorRef.current) {
+      animatorRef.current.resume();
+      setIsPaused(false);
+    }
+  };
+
+  // Handle progress slider change
+  const handleProgressChange = (e) => {
+    const newProgress = Number(e.target.value);
+    setProgress(newProgress);
+    if (animatorRef.current) {
+      animatorRef.current.seek(newProgress);
+      setIsPaused(false); // Resume animation when seeking
+    }
+  };
+
   if (!lyrics) {
     return <div>No lyrics found. Please go back and try again.</div>;
   }
 
   return (
-    <div>
-      <style>
-        {`
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            overflow-x: hidden;
-          }
-
-          .paragraph-container {
-            position: relative;
-            margin-bottom: 60px;
-            height: 100px;
-            width: 100%;
-            overflow: visible;
-          }
-
-          .sentence {
-            display: block;
-            position: absolute;
-            width: 30%;
-            text-align: center;
-            white-space: normal;
-            transition: all var(--transition-duration, 0.7s) cubic-bezier(0.4, 0, 0.2, 1);
-          }
-
-          .sentence.exiting {
-            left: 0;
-            transform: translateX(-150%);
-            opacity: 0;
-          }
-
-          .sentence.previous {
-            left: 0;
-            transform: translateX(0);
-            opacity: 0.5;
-          }
-
-          .sentence.current {
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 1;
-          }
-
-          .sentence.next {
-            left: 80%;
-            transform: translateX(-50%);
-            opacity: 0.5;
-          }
-
-          .sentence.next.start {
-            left: 120%;
-            transform: translateX(0);
-            opacity: 0;
-          }
-
-          .sentence.hidden {
-            display: none;
-          }
-        `}
-      </style>
+    <div className="lyric-style">
       <section className="lyrics-container">
         <div className="lyric-script">
           <h1>{song} by {artist}</h1>
           <p>{lyrics}</p>
+          {/* Playback controls moved inside .lyric-script */}
+          <div className="playback-controls">
+            <button onClick={handleReplay} className="replay-btn">
+              Replay
+            </button>
+            <button onClick={handlePause} className="pause-btn" disabled={isPaused}>
+              Pause
+            </button>
+            <button onClick={handleContinue} className="continue-btn" disabled={!isPaused}>
+              Continue
+            </button>
+          </div>
+          <input
+              type="range"
+              min="0"
+              max="100"
+              value={progress}
+              onChange={handleProgressChange}
+              className="progress-slider"
+            />
         </div>
       </section>
+      <div className="Chord">
+        <p>Chord is supposed to be here</p>
+      </div>
     </div>
   );
-};
+}
 
 export default Template;
