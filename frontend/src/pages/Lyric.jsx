@@ -3,21 +3,19 @@ import { useNavigate } from 'react-router-dom';
 
 function Lyric() {
   const [song, setSong] = useState('');
-  const [artist, setArtist] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
     try {
       const response = await fetch('http://localhost:8000/api/get-lyrics', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ song, artist }),
+        body: JSON.stringify({song}),
       });
 
       const data = await response.json();
@@ -29,6 +27,7 @@ function Lyric() {
       }
     } catch (error) {
       setError('Error connecting to the server');
+      console.log(error)
     }
   };
 
@@ -42,15 +41,6 @@ function Lyric() {
             type="text"
             value={song}
             onChange={(e) => setSong(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Artist: </label>
-          <input
-            type="text"
-            value={artist}
-            onChange={(e) => setArtist(e.target.value)}
             required
           />
         </div>

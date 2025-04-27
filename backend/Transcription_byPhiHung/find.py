@@ -1,38 +1,22 @@
-import requests
-from bs4 import BeautifulSoup
-import re
-from Vietnamese import INVALID_CHARACTERS, VIETNAMESE_DIACRITIC_MAP
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
 
-def find_artist_by_song(song_name: str) -> str:
-    # Format song name for search URL (lowercase, remove special chars)
-    song_query = song_name.lower().replace(" ", "+")
-    for accented, plain in VIETNAMESE_DIACRITIC_MAP.items():
-            song_query = song_query.replace(accented, plain)
-    for c in INVALID_CHARACTERS:
-        song_query = song_query.replace(c, "")
-    url = f"https://search.azlyrics.com/search.php?q={song_query}&x=07e96f882047523bba2ec9295d37161dd2b31be0fbb0740f46a7be9b4f6b14e7"
+# Set up Spotify API credentials
+client_id = "09cb2c4bf3094df69ac74b64524ba4bf"
+client_secret = "7e5f2148b2f1498ea64d0da77cb4a653"
+client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+
+def find_artist_by_song(song_title: str) -> tuple[str, str]:
+    # Search for the song
+    results = sp.search(q=song_title, type="track", limit=1)
+    tracks = results["tracks"]["items"]
     
-    # Send request with a user-agent to avoid being blocked
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-    }
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Check for request errors
-        dom = BeautifulSoup(response.text, "html.parser")
-
-        # Find the first search result (usually a table row with song info)
-        parent_div = dom.find("div", class_="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center")
-        if not parent_div:
-            return f"Error: {str(e)}"
-        
-        result = parent_div.find("td", class_ = "text-left visitedlyr")
-        URL = result.find("a")
-        
-        if result:
-            # Extract artist from the link text or nearby elements
-            artist = result.find("b").find_next("b").text
-            return artist
-        return "Song or artist not found"
-    except Exception as e:
-        return f"Error: {str(e)}"
+    if tracks:
+        # Extract artist information
+        track = tracks[0]
+        artist = track["artists"][0]["name"]
+        song = track["name"]
+        return (artist, song)
+    else:
+        return ("", "")
