@@ -1,10 +1,10 @@
-import User from '../models/User.js';
 import PasswordResetToken from '../models/PasswordResetToken.js';
 import { generateToken } from '../utils/jwt.js';
 import { sendEmail } from '../utils/email.js';
+import { passwordResetCodeTemplate } from '../utils/emailTemplates.js';
 import bcrypt from 'bcryptjs';
 import { generateVerificationCode, storeVerificationCode, verifyCode } from '../utils/verificationCode.js';
-import { passwordResetTemplate } from '../utils/emailTemplates.js';
+import User from '../../models/user.js';
 
 class PasswordService {
     async requestPasswordReset(email) {
@@ -21,18 +21,11 @@ class PasswordService {
             // Store the code
             storeVerificationCode(email, code);
 
-            // Send reset email with code
+            // Send reset email with code using the template
             await sendEmail({
                 to: user.email,
                 subject: 'Password Reset Verification Code',
-                html: `
-                    <h1>Password Reset Verification</h1>
-                    <p>You requested a password reset for your PassanGo account.</p>
-                    <p>Your verification code is:</p>
-                    <h2 style="font-size: 28px; letter-spacing: 5px; padding: 10px; background-color: #f5f5f5; text-align: center;">${code}</h2>
-                    <p>This code will expire in 10 minutes.</p>
-                    <p>If you didn't request this, please ignore this email.</p>
-                `
+                html: passwordResetCodeTemplate(user.name, code)
             });
 
             return { message: 'Password reset verification code sent' };

@@ -1,5 +1,6 @@
 import { generateVerificationCode, storeVerificationCode, verifyCode } from '../utils/verificationCode.js';
 import { sendEmail } from '../utils/email.js';
+import { verificationCodeTemplate } from '../utils/emailTemplates.js';
 import User from '../models/User.js';
 
 class VerificationService {
@@ -17,18 +18,11 @@ class VerificationService {
             // Store the code
             storeVerificationCode(email, code);
             
-            // Send verification email
+            // Send verification email using the template
             await sendEmail({
                 to: email,
                 subject: 'Your Verification Code',
-                html: `
-                    <h1>Your Verification Code</h1>
-                    <p>Hello ${user.name || 'there'},</p>
-                    <p>Your verification code is:</p>
-                    <h2 style="font-size: 28px; letter-spacing: 5px; padding: 10px; background-color: #f5f5f5; text-align: center;">${code}</h2>
-                    <p>This code will expire in 10 minutes.</p>
-                    <p>If you did not request this code, please ignore this email.</p>
-                `
+                html: verificationCodeTemplate(user.name, code)
             });
 
             return { message: 'Verification code sent' };

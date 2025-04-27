@@ -8,7 +8,6 @@ import errorHandler from './middleware/errorHandler.js';
 // Import routes
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-import adminRoutes from './routes/adminRoutes.js';
 import passwordRoutes from './routes/passwordRoutes.js';
 
 const app = express();
@@ -29,7 +28,6 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/admin', adminRoutes);
 app.use('/api/password', passwordRoutes);
 
 // Error handling middleware

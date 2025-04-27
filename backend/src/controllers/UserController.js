@@ -1,5 +1,5 @@
 import {userService} from '../services/UserService.js';
-import { validationResult } from 'express-validator';
+
 class UserController {
     async register(req, res) {
         try {

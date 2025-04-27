@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const config = {
-    port: process.env.PORT || 3000,
+    port: process.env.NODE_PORT || 3000,
     nodeEnv: process.env.NODE_ENV || 'development',
     jwtSecret: process.env.JWT_SECRET,
     jwtExpiration: process.env.JWT_EXPIRATION || '24h',
@@ -23,7 +23,16 @@ const config = {
     },
     redis: {
         url: process.env.REDIS_URL || 'redis://localhost:6379'
-    }
+    },
+    email: {
+        host: process.env.EMAIL_HOST,
+        port_email: process.env.EMAIL_PORT || 587,
+        user: process.env.EMAIL_USER,
+        password: process.env.EMAIL_PASSWORD
+    },
+    app: {
+        port_app: process.env.PYTHON_PORT || 8000,
+    },
 };
 
 // Validate required environment variables

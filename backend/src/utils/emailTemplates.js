@@ -72,9 +72,21 @@ const baseStyles = `
     .device-info li {
         margin-bottom: 5px;
     }
+    .verification-code {
+        text-align: center;
+        font-size: 32px;
+        letter-spacing: 5px;
+        margin: 20px 0;
+        font-weight: bold;
+        color: #4CAF50;
+        background-color: #f5f5f5;
+        padding: 15px;
+        border-radius: 8px;
+        display: inline-block;
+    }
 `;
 
-export const passwordResetTemplate = (resetUrl, userName) => `
+export const passwordResetCodeTemplate = (userName, code) => `
     <!DOCTYPE html>
     <html>
     <head>
@@ -83,20 +95,20 @@ export const passwordResetTemplate = (resetUrl, userName) => `
     <body>
         <div class="container">
             <div class="header">
-                <img src="D:/finalpassango3.0/passango/public/images/LOGO.png" alt="PassanGo Logo" class="logo">
-                <h1>Password Reset Request</h1>
+                <img src="https://passango.com/logo.png" alt="PassanGo Logo" class="logo">
+                <h1>Password Reset Verification</h1>
             </div>
             <div class="content">
-                <p>Hello ${userName},</p>
+                <p>Hello ${userName || 'valued user'},</p>
                 <p>We received a request to reset your password for your PassanGo account.</p>
-                <p>Click the button below to reset your password:</p>
-                <div style="text-align: center;">
-                    <a href="${resetUrl}" class="button">Reset Password</a>
-                </div>
                 <div class="info-box">
-                    <p><strong>Important:</strong> This link will expire in 1 hour.</p>
-                    <p>If you didn't request this password reset, please ignore this email or contact our support team immediately.</p>
+                    <p><strong>Your verification code is:</strong></p>
+                    <div class="verification-code">
+                        ${code}
+                    </div>
+                    <p>This code will expire in 10 minutes.</p>
                 </div>
+                <p>If you didn't request this password reset, please ignore this email or contact our support team immediately.</p>
             </div>
             <div class="footer">
                 <p>This is an automated message, please do not reply to this email.</p>
@@ -261,19 +273,19 @@ export const verificationCodeTemplate = (userName, code) => `
         <div class="container">
             <div class="header">
                 <img src="https://passango.com/logo.png" alt="PassanGo Logo" class="logo">
-                <h1>Password Reset Verification</h1>
+                <h1>Email Verification</h1>
             </div>
             <div class="content">
-                <p>Hello ${userName},</p>
-                <p>We received a request to reset your password for your PassanGo account.</p>
+                <p>Hello ${userName || 'valued user'},</p>
+                <p>Thank you for registering with PassanGo. Please verify your email address to complete your registration.</p>
                 <div class="info-box">
                     <p><strong>Your verification code is:</strong></p>
-                    <div style="text-align: center; font-size: 32px; letter-spacing: 5px; margin: 20px 0; font-weight: bold; color: #4CAF50;">
+                    <div class="verification-code">
                         ${code}
                     </div>
                     <p>This code will expire in 10 minutes.</p>
                 </div>
-                <p>If you didn't request this password reset, please ignore this email or contact our support team immediately.</p>
+                <p>If you didn't create an account with us, please ignore this email.</p>
             </div>
             <div class="footer">
                 <p>This is an automated message, please do not reply to this email.</p>
@@ -282,15 +294,15 @@ export const verificationCodeTemplate = (userName, code) => `
         </div>
     </body>
     </html>
-`; 
+`;
 
 /*
 The emailTemplates.js file contains HTML templates with styling for various email types:
 
-Password reset emails
+Password reset verification code emails
 Password changed notifications
 Suspicious activity alerts
 Welcome emails
 Account deletion confirmations
-Verification code emails
+Email verification code emails
 */

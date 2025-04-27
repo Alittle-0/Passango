@@ -1,6 +1,6 @@
 // routes/auth.js
 import express from 'express';
-import bcrypt from 'bcryptjs'; // Changed from 'bcrypt' to 'bcryptjs'
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import User from '../models/user.js';
