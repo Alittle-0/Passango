@@ -37,7 +37,7 @@ const upload = multer({
 });
 
 // Upload audio file
-router.post('/upload', authMiddleware, upload.single('audio'), async (req, res) => {
+router.post('/upload', upload.single('audio'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });

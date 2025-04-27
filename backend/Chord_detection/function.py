@@ -1,9 +1,8 @@
 import os
 import subprocess
-from chords import ChordRecognitionThread
-from key import AudioKeyRecognition
-from tempo import TempoDetectionThread
-from transpose import get_semitone_input
+from Chord_detection.chords import ChordRecognitionThread
+from Chord_detection.key import AudioKeyRecognition
+from Chord_detection.tempo import TempoDetectionThread
 
 
 class DeChordCLI:
@@ -83,6 +82,25 @@ class DeChordCLI:
         Handles the result of chord recognition.
         """
         self.chords = chords
+
+    def get_results(self):
+        """
+        Returns the recognized chords, tempo, and key as a dictionary.
+        """
+        results = {
+            "audio_file": self.audio_file,
+            "tempo": self.tempo,
+            "key": self.key,
+            "chords": [
+                {
+                    "start_time": self.format_time(start_time),
+                    "end_time": self.format_time(end_time),
+                    "chord": chord_label
+                }
+                for start_time, end_time, chord_label in self.chords
+            ] if self.chords else []
+        }
+        return results
 
     def print_results(self):
         """

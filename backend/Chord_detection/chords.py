@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 import madmom
-from transpose import transpose_chords
+from Chord_detection.transpose import transpose_chords
 
 
 class ChordRecognitionThread(QThread):

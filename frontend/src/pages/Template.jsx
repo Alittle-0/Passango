@@ -1,10 +1,10 @@
 // src/pages/Template.jsx
-import React, { useEffect, useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 function Template() {
   const location = useLocation();
-  const { lyrics, song, artist } = location.state || {};
+  const { lyrics, song, artist, chords } = location.state || {};
   const [progress, setProgress] = useState(0); // Track progress for the slider
   const [isPaused, setIsPaused] = useState(false); // Track paused state for UI
   const animatorRef = useRef(null); // Store the ParagraphAnimator instance
@@ -15,8 +15,8 @@ function Template() {
     class ParagraphAnimator {
       constructor(paragraph, index, setProgressCallback) {
         this.paragraph = paragraph;
-        this.container = document.createElement('div');
-        this.container.className = 'paragraph-container';
+        this.container = document.createElement("div");
+        this.container.className = "paragraph-container";
         this.container.id = `paragraph-${index}`;
         this.paragraph.parentNode.replaceChild(this.container, this.paragraph);
         this.sentences = this.splitSentences(paragraph.textContent);
@@ -33,14 +33,17 @@ function Template() {
 
       splitSentences(text) {
         return text
-          .split('\n')
+          .split("\n")
           .map((s) => s.trim())
           .filter((s) => s.length > 0);
       }
 
       calculateInterval(sentence) {
         const lengthFactor = sentence.length / this.averageLength;
-        const interval = Math.max(1000, this.baseInterval * lengthFactor * this.tempo);
+        const interval = Math.max(
+          1000,
+          this.baseInterval * lengthFactor * this.tempo
+        );
         return interval;
       }
 
@@ -51,9 +54,9 @@ function Template() {
 
       init() {
         this.sentences.forEach((sentence, i) => {
-          const div = document.createElement('div');
+          const div = document.createElement("div");
           div.textContent = sentence;
-          div.className = 'sentence hidden';
+          div.className = "sentence hidden";
           this.container.appendChild(div);
           this.sentenceElements.push(div);
         });
@@ -63,31 +66,35 @@ function Template() {
       updateDisplay() {
         if (this.isPaused) return;
 
-        const currentSentence = this.sentences[this.currentIndex] || '';
+        const currentSentence = this.sentences[this.currentIndex] || "";
         const interval = this.calculateInterval(currentSentence);
         const transitionDuration = this.calculateTransitionDuration(interval);
 
         this.sentenceElements.forEach((div) => {
-          div.style.setProperty('--transition-duration', `${transitionDuration}ms`);
+          div.style.setProperty(
+            "--transition-duration",
+            `${transitionDuration}ms`
+          );
         });
 
         this.sentenceElements.forEach((div, i) => {
-          div.className = 'sentence hidden';
+          div.className = "sentence hidden";
           if (i === this.currentIndex - 2) {
-            div.className = 'sentence exiting';
+            div.className = "sentence exiting";
           } else if (i === this.currentIndex - 1) {
-            div.className = 'sentence previous';
+            div.className = "sentence previous";
           } else if (i === this.currentIndex) {
-            div.className = 'sentence current';
+            div.className = "sentence current";
           } else if (i === this.currentIndex + 1) {
-            div.className = 'sentence next start';
+            div.className = "sentence next start";
             void div.offsetWidth;
-            div.className = 'sentence next';
+            div.className = "sentence next";
           }
         });
 
         // Update progress for the slider
-        const progressPercentage = (this.currentIndex / (this.sentences.length - 1)) * 100;
+        const progressPercentage =
+          (this.currentIndex / (this.sentences.length - 1)) * 100;
         this.setProgressCallback(progressPercentage);
 
         clearTimeout(this.nextTimeout);
@@ -111,8 +118,13 @@ function Template() {
       // Seek to a specific point in the animation based on progress (0 to 100)
       seek(progress) {
         this.isPaused = false;
-        const targetIndex = Math.round((progress / 100) * (this.sentences.length - 1));
-        this.currentIndex = Math.min(Math.max(targetIndex, 0), this.sentences.length - 1);
+        const targetIndex = Math.round(
+          (progress / 100) * (this.sentences.length - 1)
+        );
+        this.currentIndex = Math.min(
+          Math.max(targetIndex, 0),
+          this.sentences.length - 1
+        );
         this.updateDisplay();
       }
 
@@ -132,10 +144,14 @@ function Template() {
     }
 
     // Initialize animation
-    const lyricContainer = document.querySelector('.lyric-script p');
+    const lyricContainer = document.querySelector(".lyric-script p");
     if (lyricContainer && lyrics) {
       lyricContainer.textContent = lyrics;
-      animatorRef.current = new ParagraphAnimator(lyricContainer, 0, setProgress);
+      animatorRef.current = new ParagraphAnimator(
+        lyricContainer,
+        0,
+        setProgress
+      );
     }
 
     return () => {
@@ -185,32 +201,50 @@ function Template() {
     <div className="lyric-style">
       <section className="lyrics-container">
         <div className="lyric-script">
-          <h1>{song} by {artist}</h1>
+          <h1>
+            {song} by {artist}
+          </h1>
           <p>{lyrics}</p>
           {/* Playback controls moved inside .lyric-script */}
           <div className="playback-controls">
             <button onClick={handleReplay} className="replay-btn">
               Replay
             </button>
-            <button onClick={handlePause} className="pause-btn" disabled={isPaused}>
+            <button
+              onClick={handlePause}
+              className="pause-btn"
+              disabled={isPaused}
+            >
               Pause
             </button>
-            <button onClick={handleContinue} className="continue-btn" disabled={!isPaused}>
+            <button
+              onClick={handleContinue}
+              className="continue-btn"
+              disabled={!isPaused}
+            >
               Continue
             </button>
           </div>
           <input
-              type="range"
-              min="0"
-              max="100"
-              value={progress}
-              onChange={handleProgressChange}
-              className="progress-slider"
-            />
+            type="range"
+            min="0"
+            max="100"
+            value={progress}
+            onChange={handleProgressChange}
+            className="progress-slider"
+          />
         </div>
       </section>
       <div className="Chord">
         <p>Chord is supposed to be here</p>
+        <br/>
+        <ul>
+          {chords.map((chord, index) => (
+            <li key={index}>
+              {chord.start_time} - {chord.end_time}: {chord.chord}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
