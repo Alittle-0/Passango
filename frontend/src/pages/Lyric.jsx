@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Lyric() {
+function Create() {
   const [song, setSong] = useState("");
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
@@ -100,4 +100,4 @@ function Lyric() {
   );
 }
 
-export default Lyric;
+export default Create;

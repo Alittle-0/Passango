@@ -11,29 +11,38 @@
     justify-content: center;
     padding: 10%;
     background-color: #333333;
+    h1{color: white;;}
     .upload-box {
-    
+      display: flex;
+      flex-direction: column;
+      gap:20px;
       border: 2px dashed rgb(179, 179, 179);
       padding: 1.5rem;
       margin: 0 auto;
       max-width: 500px;
       background-color: transparent;
-      p {
-        margin-bottom: 0.5rem;
-        color: white;
-        font-size: 0.9rem;
-      }
-
       form {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-
+        label{
+          color: #ffffff;
+          font-size: 1.5rem;
+          font-weight: 600;
+          text-align: center;
+        }
+        .song-input{
+          input{
+            color:black;
+          }
+        }
+        
         input  {
+          width: 70%;;
           padding: 1rem;
-          border: 1px solid ;
+          border: 1px solid white ;
           border-radius: 0.25rem;
-          color: white;
+          color: rgb(255, 255, 255);
           text-align: center;
           &::-webkit-file-upload-button {
             background-color: black;
@@ -51,10 +60,12 @@
               transform: scale(1.02);
             }
           }
+          &.file-input-change{
+            color:rgb(255, 255, 255,0);
+          }
         }
 
         button {
-          margin-top: 40px;;
           background-color: black;
           color: #b1a480;
           padding: 20px 30px;
@@ -70,6 +81,7 @@
           }
         }
       }
+      .file-status{color:white;}
     }
   }
 }@media(max-width: 768px){
@@ -79,6 +91,17 @@
       .upload-box {
         max-width: 100%;
         form {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          div{
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+          }
+          label {
+            font-size: 1.2rem;
+          }
           input {
             width: 100%;
           }
