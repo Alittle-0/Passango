@@ -102,7 +102,7 @@ function Create() {
               <h1>Find Lyrics</h1>
               <form onSubmit={handleSubmit}>
                 <div className="song-input">
-                  <label>Song: </label>
+                  <label>Song:</label>
                   <input
                     type="text"
                     value={song}
@@ -112,18 +112,28 @@ function Create() {
                 </div>
                 <div className="file-input">
                   <label>Audio: </label>
-                  <input
-                    type="file"
-                    id="audio-upload"
-                    accept="audio/mp3,audio/wav"
-                    onChange={handleFileChange}
-                    aria-label="Upload audio file"
-                    required
-                    className={file?"file-input-change":""}
-                  />
-                  <label for="audio-upload">Select or drop an audio file</label>
+                  <div className="custom-file-wrapper">
+                    <input
+                      type="file"
+                      id="audio-upload"
+                      accept="audio/mp3,audio/wav"
+                      onChange={handleFileChange}
+                      required
+                      // old: className=""
+                      className={file ? "file-input-change" : ""} // 🆕 add transparent style when file is selected
+                    />
+                    {/* 🆕 This image replaces the "No file chosen" text when a file is selected */}
+                    {file && (
+                      <img
+                        src="/public/images/paper-icon.png"
+                        className="input-overlay-icon"
+                      />
+                    )}
+                  </div>
                 </div>
-                
+                <label htmlFor="audio-upload" className="tips">
+                    {file ? file.name : "Select or drop an audio file"} {/* ✅ Show file name if selected */}
+                  </label>
                 <button type="submit" className="btn-upload">Upload</button>
               </form>
               {error && <p style={{ color: "red" }}>{error}</p>}
