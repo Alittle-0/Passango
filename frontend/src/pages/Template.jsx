@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 function Template() {
   const location = useLocation();
-  const { lyrics, song, artist, chords } = location.state || {};
+  const { lyrics, song, artist, chords, tempo, key } = location.state || {};
   const [progress, setProgress] = useState(0); // Track progress for the slider
   const [isPaused, setIsPaused] = useState(false); // Track paused state for UI
   const animatorRef = useRef(null); // Store the ParagraphAnimator instance
@@ -24,7 +24,7 @@ function Template() {
         this.sentenceElements = [];
         this.baseInterval = 2000;
         this.baseTransition = 700;
-        this.tempo = 1.0;
+        this.tempo = 1.0//set by the time of chord(tempo)
         this.averageLength = 30;
         this.setProgressCallback = setProgressCallback; // Callback to update progress
         this.isPaused = false; // Track paused state

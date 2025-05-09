@@ -3,8 +3,6 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QTimer
 from Chord_detection.function import DeChordCLI
 from Chord_detection.transpose import get_semitone_input
-import tempfile
-import os
 import sys
 
 def process_audio(audio_data: BytesIO, filename: str = "temp_audio.wav"):
@@ -24,18 +22,13 @@ def process_audio(audio_data: BytesIO, filename: str = "temp_audio.wav"):
     # Initialize DeChordCLI
     dechord = DeChordCLI()
 
-    # Create a temporary file to store the audio data
-    with tempfile.NamedTemporaryFile(suffix=f".{filename.rsplit('.', 1)[1]}", delete=False) as temp_file:
-        temp_file.write(audio_data.read())
-        temp_file_path = temp_file.name
-
     try:
         # Preprocess the audio (converts to WAV if needed)
-        processed_file = dechord.preprocess_audio(temp_file_path)
+        dechord.preprocess_audio(audio_data, filename)
         semitones = get_semitone_input()
         
         # Load and process the audio
-        dechord.load_audio(processed_file, semitones)
+        dechord.load_audio(semitones)
         
         # Use QTimer to delay result collection until processing is complete
         results = None
@@ -51,11 +44,5 @@ def process_audio(audio_data: BytesIO, filename: str = "temp_audio.wav"):
         app.exec_()
         
         return results
-
-    finally:
-        # Clean up temporary files
-        if os.path.exists(temp_file_path):
-            os.unlink(temp_file_path)
-        # Clean up processed file if it exists and is different from temp_file_path
-        if processed_file != temp_file_path and os.path.exists(processed_file):
-            os.unlink(processed_file)
+    except Exception as e:
+            return f"Audio processing failed: {str(e)}"
