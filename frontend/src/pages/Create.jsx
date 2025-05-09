@@ -101,6 +101,7 @@ function Create() {
   return (
     <section id="create">
       <Header />
+<<<<<<< HEAD
       <main>
         <section className="create-section">
           <div className="upload-box">
@@ -138,6 +139,53 @@ function Create() {
         </section>
       </main>
       <Footer />
+=======
+        <main>
+          <section className="create-section">
+            <div className="upload-box">
+              <h1>Find Lyrics</h1>
+              <form onSubmit={handleSubmit}>
+                <div className="song-input">
+                  <label>Song:</label>
+                  <input
+                    type="text"
+                    value={song}
+                    onChange={(e) => setSong(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="file-input">
+                  <label>Audio: </label>
+                  <div className="custom-file-wrapper">
+                    <input
+                      type="file"
+                      id="audio-upload"
+                      accept="audio/mp3,audio/wav"
+                      onChange={handleFileChange}
+                      required
+                      // old: className=""
+                      className={file ? "file-input-change" : ""} // 🆕 add transparent style when file is selected
+                    />
+                    {/* 🆕 This image replaces the "No file chosen" text when a file is selected */}
+                    {file && (
+                      <img
+                        src="/public/images/paper-icon.png"
+                        className="input-overlay-icon"
+                      />
+                    )}
+                  </div>
+                </div>
+                <label htmlFor="audio-upload" className="tips">
+                    {file ? file.name : "Select or drop an audio file"} {/* ✅ Show file name if selected */}
+                  </label>
+                <button type="submit" className="btn-upload">Upload</button>
+              </form>
+              {error && <p style={{ color: "red" }}>{error}</p>}
+            </div>
+          </section>
+        </main>
+        <Footer />
+>>>>>>> af0c0b02bd978b1af36a0e46e6d21602037747ed
     </section>
   );
 }
