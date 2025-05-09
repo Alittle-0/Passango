@@ -101,45 +101,6 @@ function Create() {
   return (
     <section id="create">
       <Header />
-<<<<<<< HEAD
-      <main>
-        <section className="create-section">
-          <div className="upload-box">
-            <h1>Find Lyrics</h1>
-            <form onSubmit={handleSubmit}>
-              <div className="song-input">
-                <label>Song: </label>
-                <input
-                  type="text"
-                  value={song}
-                  onChange={(e) => setSong(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="file-input">
-                <label>Audio: </label>
-                <input
-                  type="file"
-                  id="audio-upload"
-                  accept="audio/mp3,audio/wav"
-                  onChange={handleFileChange}
-                  aria-label="Upload audio file"
-                  required
-                  className={file ? "file-input-change" : ""}
-                />
-                <label for="audio-upload">Select or drop an audio file</label>
-              </div>
-
-              <button type="submit" className="btn-upload">
-                Upload
-              </button>
-            </form>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-          </div>
-        </section>
-      </main>
-      <Footer />
-=======
         <main>
           <section className="create-section">
             <div className="upload-box">
@@ -185,7 +146,6 @@ function Create() {
           </section>
         </main>
         <Footer />
->>>>>>> af0c0b02bd978b1af36a0e46e6d21602037747ed
     </section>
   );
 }
