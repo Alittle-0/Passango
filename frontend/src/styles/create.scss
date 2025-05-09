@@ -11,30 +11,53 @@
     justify-content: center;
     padding: 10%;
     background-color: #333333;
+    h1 {
+      color: white;
+    }
     .upload-box {
-    
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       border: 2px dashed rgb(179, 179, 179);
       padding: 1.5rem;
       margin: 0 auto;
       max-width: 500px;
       background-color: transparent;
-      p {
-        margin-bottom: 0.5rem;
-        color: white;
-        font-size: 0.9rem;
-      }
-
       form {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
-
-        input  {
-          padding: 1rem;
-          border: 1px solid ;
-          border-radius: 0.25rem;
-          color: white;
-          text-align: center;
+        gap: 20px;
+        .file-input{gap:10px;}
+        .song-input, .file-input {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          label {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: left;
+            width: 100px; // Fixed width for labels to align inputs
+          }
+          input {
+            flex: 1; // Inputs take remaining space
+            padding: 1rem;
+            border: 1px solid white;
+            border-radius: 0.25rem;
+            color: black;
+            text-align: center;
+            box-sizing: border-box;
+          }
+        }
+        label.tips {
+          font-size: 1rem;
+          font-weight: bold;
+          color:white;
+          width: auto; // Reset width for the tips label
+        }
+        input {
+          color: rgb(255, 255, 255);
           &::-webkit-file-upload-button {
             background-color: black;
             color: #b1a480;
@@ -51,10 +74,11 @@
               transform: scale(1.02);
             }
           }
+          &.file-input-change {
+            color: rgb(255, 255, 255, 0);
+          }
         }
-
         button {
-          margin-top: 40px;;
           background-color: black;
           color: #b1a480;
           padding: 20px 30px;
@@ -65,25 +89,53 @@
           transition: all 0.7s ease;
           &:hover {
             background-color: gray;
-            color:black;
+            color: black;
             transform: scale(1.05);
           }
         }
       }
     }
   }
-}@media(max-width: 768px){
+}
+
+@media(max-width: 768px) {
   #create {
     .create-section {
       padding: 50% 10% 10% 10%;
       .upload-box {
         max-width: 100%;
         form {
-          input {
-            width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          .song-input, .file-input {
+            flex-direction: column;
+            align-items: center;
+            label {
+              font-size: 1.2rem;
+              width: auto;
+              text-align: center;
+            }
+            input {
+              width: 100%;
+            }
           }
         }
       }
     }
   }
+}
+
+.custom-file-wrapper {
+  position: relative;
+  width: 100%; // Match the width of the song input
+}
+
+.input-overlay-icon {
+  position: absolute;
+  top: 50%;
+  right: 50px;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
 }

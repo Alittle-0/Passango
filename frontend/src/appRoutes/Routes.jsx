@@ -9,6 +9,8 @@ import Create from '../pages/Create';
 import Profile from '../pages/Profile';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
+import Lyric from '../pages/Lyric';
+import Template from '../pages/Template';
 
 function AppRoutes() {
   return (
@@ -22,6 +24,8 @@ function AppRoutes() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/lyric" element={<Lyric />} />
+      <Route path="/template" element={<Template />} />
     </Routes>
   );
 }

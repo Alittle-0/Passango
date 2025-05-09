@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "npx kill-port 3000 && nodemon index.js"
+    "dev": "concurrently \"npx kill-port 3000 && nodemon index.js\" \"cd Transcription_byPhiHung && python app.py\"",
+    "dev-node": "npx kill-port 3000 && nodemon index.js",
+    "dev-python": "cd Transcription_byPhiHung && python app.py"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +28,7 @@
     "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
-    "port": "^0.8.1"
+    "port": "^0.8.1",
+    "zxcvbn": "^4.4.2"
   }
 }
