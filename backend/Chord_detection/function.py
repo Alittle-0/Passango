@@ -105,6 +105,7 @@ class DeChordCLI:
                 }
                 for start_time, end_time, chord_label in self.chords
             ] if self.chords else []
+            
         }
         return results
 

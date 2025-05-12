@@ -2,50 +2,56 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Loading from "../pages/Loading";
+
 function Create() {
   const [song, setSong] = useState("");
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // New state for loading
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    console.log("Selected file:", selectedFile); // Debug: Log the selected file
+    console.log("Selected file:", selectedFile);
     setFile(selectedFile);
   };
-  // Adding drag and drop functionality for file input
+
   const handleDragOver = (e) => {
-    e.preventDefault(); // Prevent default behavior to allow drop
-    e.currentTarget.classList.add("drag-over"); // Optional: Add visual feedback
+    e.preventDefault();
+    e.currentTarget.classList.add("drag-over");
   };
 
-  // Handling file drop event
   const handleDrop = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.remove("drag-over"); // Optional: Remove visual feedback
+    e.currentTarget.classList.remove("drag-over");
     const droppedFile = e.dataTransfer.files[0];
     if (
       droppedFile &&
       (droppedFile.type === "audio/mp3" || droppedFile.type === "audio/wav")
     ) {
-      console.log("Dropped file:", droppedFile); // Debug: Log the dropped file
+      console.log("Dropped file:", droppedFile);
       setFile(droppedFile);
     } else {
       setError("Please drop a valid MP3 or WAV file");
     }
   };
 
-  // Cleaning up drag-over class on drag leave
   const handleDragLeave = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.remove("drag-over"); // Optional: Remove visual feedback
+    e.currentTarget.classList.remove("drag-over");
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true); // Show loading component
 
     if (!file) {
       console.log("Please select a file to upload");
+      ansible
+      setError("Please select a file to upload");
+      setIsLoading(false); // Hide loading component
       return;
     }
 
@@ -95,57 +101,64 @@ function Create() {
     } catch (error) {
       setError("Error connecting to the server");
       console.log(error);
+    } finally {
+      setIsLoading(false); // Hide loading component
     }
   };
+
+  // Render Loading component if isLoading is true
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <section id="create">
       <Header />
-        <main>
-          <section className="create-section">
-            <div className="upload-box">
-              <h1>Find Lyrics</h1>
-              <form onSubmit={handleSubmit}>
-                <div className="song-input">
-                  <label>Song:</label>
+      <main>
+        <section className="create-section">
+          <div className="upload-box">
+            <h1>Find Lyrics</h1>
+            <form onSubmit={handleSubmit}>
+              <div className="song-input">
+                <label>Song:</label>
+                <input
+                  type="text"
+                  value={song}
+                  onChange={(e) => setSong(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="file-input">
+                <label>Audio: </label>
+                <div className="custom-file-wrapper">
                   <input
-                    type="text"
-                    value={song}
-                    onChange={(e) => setSong(e.target.value)}
+                    type="file"
+                    id="audio-upload"
+                    accept="audio/mp3,audio/wav"
+                    onChange={handleFileChange}
                     required
+                    className={file ? "file-input-change" : ""}
                   />
-                </div>
-                <div className="file-input">
-                  <label>Audio: </label>
-                  <div className="custom-file-wrapper">
-                    <input
-                      type="file"
-                      id="audio-upload"
-                      accept="audio/mp3,audio/wav"
-                      onChange={handleFileChange}
-                      required
-                      // old: className=""
-                      className={file ? "file-input-change" : ""} // 🆕 add transparent style when file is selected
+                  {file && (
+                    <img
+                      src="/public/images/paper-icon.png"
+                      className="input-overlay-icon"
                     />
-                    {/* 🆕 This image replaces the "No file chosen" text when a file is selected */}
-                    {file && (
-                      <img
-                        src="/public/images/paper-icon.png"
-                        className="input-overlay-icon"
-                      />
-                    )}
-                  </div>
+                  )}
                 </div>
-                <label htmlFor="audio-upload" className="tips">
-                    {file ? file.name : "Select or drop an audio file"} {/* ✅ Show file name if selected */}
-                  </label>
-                <button type="submit" className="btn-upload">Upload</button>
-              </form>
-              {error && <p style={{ color: "red" }}>{error}</p>}
-            </div>
-          </section>
-        </main>
-        <Footer />
+              </div>
+              <label htmlFor="audio-upload" className="tips">
+                {file ? file.name : "Select or drop an audio file"}
+              </label>
+              <button type="submit" className="btn-upload">
+                Upload
+              </button>
+            </form>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+          </div>
+        </section>
+      </main>
+      <Footer />
     </section>
   );
 }
