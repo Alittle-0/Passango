@@ -1,15 +1,15 @@
 from PyQt5.QtCore import QThread, pyqtSignal
-import madmom
-from Chord_detection.transpose import transpose_chords
+from madmom.features.chords import CNNChordFeatureProcessor, CRFChordRecognitionProcessor
+import numpy as np
 
 
 class ChordRecognitionThread(QThread):
     result = pyqtSignal(list)
 
-    def __init__(self, audio_path, transpose=0):
+    def __init__(self, audio_data, sample_rate):
         super().__init__()
-        self.audio_path = audio_path
-        self.transpose = transpose  # Number of semitones to transpose
+        self.audio_data = audio_data
+        self.sample_rate = sample_rate
 
     def run(self):
         # Process chords using madmom
@@ -17,10 +17,6 @@ class ChordRecognitionThread(QThread):
 
         # Format chords
         formatted_chords = self._format_chords(chords)
-
-        # Apply transposition if needed
-        if self.transpose != 0:
-            formatted_chords = transpose_chords(formatted_chords, self.transpose)
 
         # Emit the final result
         self.result.emit(formatted_chords)
@@ -30,9 +26,17 @@ class ChordRecognitionThread(QThread):
         """
         Processes the audio file to recognize chords using madmom.
         """
-        feat_processor = madmom.features.chords.CNNChordFeatureProcessor()
-        recog_processor = madmom.features.chords.CRFChordRecognitionProcessor()
-        feats = feat_processor(self.audio_path)
+        audio_data = self.audio_data
+        # Convert audio data to proper format for madmom
+        if len(audio_data.shape) > 1:
+            # Convert stereo to mono by averaging channels
+            audio_mono = np.mean(self.audio_data, axis=1)
+        else:
+            audio_mono = self.audio_data
+            
+        feat_processor = CNNChordFeatureProcessor()
+        recog_processor = CRFChordRecognitionProcessor()
+        feats = feat_processor(audio_mono)
         return recog_processor(feats)
 
     def _format_chords(self, chords):
