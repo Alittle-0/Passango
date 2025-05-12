@@ -1,4 +1,3 @@
-// src/pages/Profile.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
@@ -56,11 +55,15 @@ function Profile() {
       <main>
         <div className="profile_header">
           <h2>User Profile</h2>
-          <img src="public/images/mrchau.jpg" className="profile_logo" alt="Profile Logo" />
+          <img
+            src={user.avatar ? `${import.meta.env.VITE_API_URL}/uploads/avatars/${user.avatar}` : 'public/images/default_avatar.png'}
+            className="profile_logo"
+            alt="Profile Avatar"
+          />
         </div>
         <div className="user_content">
           <h2>ACCOUNT</h2>
-          <div className="edit_profile">
+          <div className="edit_profile" onClick={() => setIsModalOpen(true)}>
             <img src="public/images/pen_icon.png" className="img_profile" alt="Edit Icon" />
             <p>Edit profile</p>
           </div>
@@ -68,10 +71,10 @@ function Profile() {
             <img src="public/images/list_icon.png" className="img_profile" alt="Playlists Icon" />
             <p>Recent playlists</p>
           </div>
-          <div className="reset_profile" onClick={() => setIsModalOpen(true)}>
+         {/*  <div className="reset_profile" onClick={() => setIsModalOpen(true)}>
             <img src="public/images/unlock_icon.png" className="img_profile" alt="Reset Icon" />
             <p>Reset password</p>
-          </div>
+          </div>   */}
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Update Profile">
             <ProfileForm user={user} setUser={setUser} onClose={() => setIsModalOpen(false)} />
           </Modal>
@@ -82,11 +85,27 @@ function Profile() {
   );
 }
 
-function ProfileForm({ user, setUser, onClose }) {
-  const [email, setEmail] = useState(user.email);
-  const [password, setPassword] = useState('');
+function ProfileForm({ user, setUser }) {
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(user.avatar ? `${import.meta.env.VITE_API_URL}/uploads/avatars/${user.avatar}` : null);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!['image/jpeg', 'image/png'].includes(file.type)) {
+        setError('Please upload a JPEG or PNG image.');
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        setError('Image size must be less than 2MB.');
+        return;
+      }
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,32 +114,35 @@ function ProfileForm({ user, setUser, onClose }) {
 
     const token = localStorage.getItem('token');
     if (!token) {
+      setError('Authentication required');
       return;
     }
 
-    const requestData = { email };
-    if (password) {
-      requestData.password = password;
-    }
-
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/profile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to update profile');
+      if (!avatarFile) {
+        setError('Please select an image to upload');
+        return;
       }
 
-      setSuccess(data.message);
-      setUser({ ...user, email: data.user.email });
-      localStorage.setItem('user', JSON.stringify(data.user));
+      const formData = new FormData();
+      formData.append('avatar', avatarFile);
+
+      const avatarResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/upload-avatar`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const avatarData = await avatarResponse.json();
+      if (!avatarResponse.ok) {
+        throw new Error(avatarData.message || 'Failed to upload avatar');
+      }
+
+      setUser({ ...user, avatar: avatarData.avatar });
+      localStorage.setItem('user', JSON.stringify({ ...user, avatar: avatarData.avatar }));
+      setSuccess('Avatar uploaded successfully');
     } catch (err) {
       console.error('Update profile error:', err);
       setError(err.message);
@@ -131,31 +153,29 @@ function ProfileForm({ user, setUser, onClose }) {
     <form onSubmit={handleSubmit}>
       {error && <p className="error-message">{error}</p>}
       {success && <p className="success-message">{success}</p>}
-      <div className="profile_email">
-        <label htmlFor="email">Email</label>
+      <div className="profile_avatar">
+        <label htmlFor="avatar">Profile Avatar</label>
+        {avatarPreview && (
+          <img
+            src={avatarPreview}
+            alt="Avatar Preview"
+            style={{ width: '100px', height: '100px', borderRadius: '50px', margin: '10px 0' }}
+          />
+        )}
         <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          required
+          type="file"
+          id="avatar"
+          accept="image/jpeg,image/png"
+          onChange={handleAvatarChange}
+          style={{ display: 'none' }}
         />
+        <label htmlFor="avatar" className="avatar_upload_label">
+          Choose Avatar
+        </label>
       </div>
-      <div className="profile_newpass">
-        <label htmlFor="password">New Password</label>
-        <p>(leave blank to keep current)</p>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter new password"
-        />
-        <button type="submit" className="modal-btn">
-          Update Profile
-        </button>
-      </div>
+      <button type="submit" className="modal-btn">
+        Update Avatar
+      </button>
     </form>
   );
 }

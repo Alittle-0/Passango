@@ -1,12 +1,14 @@
 // src/pages/ForgotPassword.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import VerificationPopup from './VerificationPopup';
 
 function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +30,7 @@ function ForgotPassword() {
       }
 
       setSuccess(data.message);
+      setShowPopup(true);
     } catch (err) {
       console.error('Forgot password error:', err);
       setError(err.message);
@@ -57,7 +60,7 @@ function ForgotPassword() {
               required
             />
             <button type="submit" className="button_forgot">
-              Send Reset Link
+              Send Verification Code
             </button>
             <p>
               <a href="#" onClick={() => navigate('/login')}>
@@ -67,6 +70,12 @@ function ForgotPassword() {
           </form>
         </div>
       </div>
+      {showPopup && (
+        <VerificationPopup 
+          email={email} 
+          onClose={() => setShowPopup(false)} 
+        />
+      )}
     </div>
   );
 }
