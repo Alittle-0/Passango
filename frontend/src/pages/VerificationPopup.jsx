@@ -61,18 +61,17 @@ const VerificationPopup = ({ email, onClose }) => {
 
         try {
             setIsLoading(true);
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/verify-code`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/verify-code`, {
                 email,
                 code: verificationCode
             });
             
-            // Navigate to reset password page
-            navigate('/reset-password', { 
-                state: { 
-                    email,
-                    code: verificationCode 
-                } 
-            });
+            if (response.data.message === 'Code verified successfully' && response.data.tempToken) {
+                // Navigate to reset password page with tempToken
+                navigate('/reset-password', { state: { tempToken: response.data.tempToken } });
+            } else {
+                toast.error(response.data.message || 'Verification failed or token missing');
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || 'Invalid verification code');
         } finally {

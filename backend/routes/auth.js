@@ -1,23 +1,15 @@
 // routes/auth.js
 import express from 'express';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
+import { sendEmail } from '../src/utils/email.js';
+import { passwordResetCodeTemplate } from '../src/utils/emailTemplates.js';
+import { generateVerificationCode, storeVerificationCode, verifyCode } from '../src/utils/verificationCode.js';
 import User from '../models/user.js';
 import authMiddleware from '../middleware/auth.js';
+import upload from '../src/middleware/upload.js';
 
 const router = express.Router();
 
-// Configure Nodemailer
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: false, // Use TLS
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
 // Signup route
 router.post('/signup', async (req, res) => {
@@ -183,54 +175,106 @@ router.post('/forgot-password', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Generate a reset token
-    const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '15m', // Token expires in 15 minutes
+    // Generate verification code
+    const code = generateVerificationCode();
+    storeVerificationCode(email, code);
+
+    // Get user's name or use email if username doesn't exist
+    const userName = user.username || user.name || email.split('@')[0];
+
+    // Send email with verification code
+    await sendEmail({
+      to: user.email,
+      subject: 'Password Reset Verification - PassanGo',
+      html: passwordResetCodeTemplate(userName, code)
     });
 
-    // Send email with reset link
-    const resetLink = `http://localhost:5173/reset-password?token=${resetToken}`;
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: user.email,
-      subject: 'Password Reset Request',
-      text: `You requested a password reset. Click the link to reset your password: ${resetLink}\nThis link will expire in 15 minutes.`,
-    };
-
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: 'Password reset email sent' });
+    res.status(200).json({ message: 'Verification code sent to your email' });
   } catch (error) {
     console.error('Forgot password error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
+// Verify code route
+router.post('/verify-code', async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    if (!email || !code) {
+      return res.status(400).json({ message: 'Email and code are required' });
+    }
+    const result = verifyCode(email, code); // This should ideally be an async operation if it involves DB/Redis in future
+    if (!result.valid) {
+      return res.status(400).json({ message: result.message });
+    }
+    // Issue a temporary token valid for 10 minutes
+    const tempToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '10m' });
+    res.json({ message: 'Code verified successfully', tempToken });
+  } catch (error) {
+    console.error('Verify code error:', error);
+    res.status(500).json({ message: error.message || 'Internal server error' });
+  }
+});
+
 // Reset password
 router.post('/reset-password', async (req, res) => {
   try {
-    const { token, newPassword } = req.body;
+    const { tempToken, newPassword } = req.body;
 
-    if (!token || !newPassword) {
+    if (!tempToken || !newPassword) {
       return res.status(400).json({ message: 'Token and new password are required' });
     }
 
-    // Verify the reset token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId);
+    let decoded;
+    try {
+      decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+    } catch (err) {
+      console.error('JWT verification error:', err);
+      return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+
+    const email = decoded.email;
+    if (!email) {
+        return res.status(400).json({ message: 'Token does not contain email' });
+    }
+
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Update the password - use pre-save hook for hashing
-    user.password = newPassword;
+    user.password = newPassword; // Will be hashed by pre-save hook in User model
     await user.save();
 
     res.status(200).json({ message: 'Password reset successfully' });
   } catch (error) {
     console.error('Reset password error:', error);
-    if (error.name === 'TokenExpiredError') {
-      return res.status(400).json({ message: 'Reset token has expired' });
+    res.status(500).json({ message: error.message || 'Server error' });;
+  }
+});
+
+// Upload avatar
+router.post('/upload-avatar', authMiddleware, upload.single('avatar'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
     }
+
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user's avatar field with the filename
+    user.avatar = req.file.filename;
+    await user.save();
+
+    res.status(200).json({ 
+      message: 'Avatar uploaded successfully',
+      avatar: user.avatar
+    });
+  } catch (error) {
+    console.error('Avatar upload error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });

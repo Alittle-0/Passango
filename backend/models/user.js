@@ -1,4 +1,3 @@
-// models/user.js
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { validatePassword } from '../src/utils/passwordValidator.js'; 
@@ -38,12 +37,12 @@ const userSchema = new mongoose.Schema({
 
   avatar: {
     type: String,
-    // Will fix this later 
+    default: null,
   },
 
   lastLogin: {
     type: Date
-},
+  },
 
   loginAttempts: {
     type: Number,
@@ -52,7 +51,7 @@ const userSchema = new mongoose.Schema({
 
 });
 
-//Pre-save hook to hash password
+// Pre-save hook to hash password
 userSchema.pre('save', async function(next) {
   // Only hash the password if it's modified or new
   if (!this.isModified('password')) return next();
