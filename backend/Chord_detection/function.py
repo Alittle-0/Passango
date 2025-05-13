@@ -1,8 +1,12 @@
 from io import BytesIO
-from pydub import AudioSegment
+import soundfile as sf
+import numpy as np
+import time
+from scipy import signal
+
 from Chord_detection.chords import ChordRecognitionThread
 from Chord_detection.key import AudioKeyRecognition
-from Chord_detection.tempo import TempoDetectionThread
+from Chord_detection.tempo import TempoRecognitionThread
 
 
 class DeChordCLI:
@@ -12,69 +16,88 @@ class DeChordCLI:
     """
     def __init__(self):
         self.chords = []
-        self.tempo = None
         self.key = None
         self.audio_data = None
 
-    def preprocess_audio(self, audio_data: BytesIO, filename: str):
+    def preprocess_audio(self, audio_data: BytesIO):
         """
-        Process audio data from a BytesIO object in-memory and convert to WAV format if necessary.
+        Process audio data from a BytesIO object using soundfile.
         
         Args:
             audio_data (BytesIO): In-memory audio file data.
             filename (str): Reference filename to determine input format.
         
         Returns:
-            BytesIO: Processed audio data in WAV format.
+            tuple: (numpy.ndarray, int) containing audio data and sample rate
         """
         try:
-            # Load audio from BytesIO using pydub
-            audio_data.seek(0)  # Reset buffer position
-            file_extension = filename.rsplit(".", 1)[1].lower()
-            audio = AudioSegment.from_file(audio_data, format=file_extension)
+            # Reset buffer position
+            audio_data.seek(0)
             
-            # Convert to WAV format with 44.1 kHz sample rate and stereo
-            audio = audio.set_frame_rate(44100).set_channels(2)
+            # Read audio data using soundfile
+            data, sample_rate = sf.read(audio_data)
             
-            # Export to BytesIO as WAV
-            output_audio = BytesIO()
-            audio.export(output_audio, format="wav")
-            output_audio.seek(0)
+            # Convert to stereo if mono
+            if len(data.shape) == 1:
+                data = np.column_stack((data, data))
+                
+            # Resample to 44100 Hz if necessary
+            if sample_rate != 44100:
+                n_samples = int(len(data) * 44100 / sample_rate)
+                data = signal.resample(data, n_samples)
+                sample_rate = 44100
             
-            self.audio_data = output_audio
+            self.audio_data = (data, sample_rate)
+            
         except Exception as e:
             print(f"Error during in-memory audio conversion: {e}")
             exit(1)
 
-    def load_audio(self, semitones):
+    def load_audio(self):
         """
         Loads an audio file, detects tempo and key, and processes chords with transposition.
         """
         #Load audio data
-        audio_data = self.audio_data
+        data, sample_rate = self.audio_data
         print("Loading audio data")
-
-    # Start tempo detection
-        self.tempo_thread = TempoDetectionThread(audio_data)
-        self.tempo_thread.result.connect(self.on_tempo_detected)
+        
+        # Calculate duration in seconds
+        duration = len(data) / sample_rate
+        print(f"Audio duration: {self.format_time(duration)}")
+        
+        # Start tempo recognition
+        print("\nStarting tempo recognition...")
+        start_time = time.time()
+        self.tempo_thread = TempoRecognitionThread(data, sample_rate)
+        self.tempo_thread.result.connect(self.on_tempo_recognized)
         self.tempo_thread.start()
         self.tempo_thread.wait()
+        tempo_time = time.time() - start_time
+        print(f"Tempo recognition completed in {tempo_time:.2f} seconds")
 
-    # Start key recognition
-        self.key_thread = AudioKeyRecognition(audio_data)
+        # Start key recognition
+        print("\nStarting key recognition...")
+        start_time = time.time()
+        self.key_thread = AudioKeyRecognition(data, sample_rate)
         self.key_thread.key_detected.connect(self.on_key_recognized)
         self.key_thread.start()
         self.key_thread.wait()
+        key_time = time.time() - start_time
+        print(f"Key recognition completed in {key_time:.2f} seconds")
 
-    # Start chord recognition with the provided semitones
-        self.chord_thread = ChordRecognitionThread(audio_data, transpose=semitones)
+        # Start chord recognition
+        print("\nStarting chord recognition...")
+        start_time = time.time()
+        self.chord_thread = ChordRecognitionThread(data, sample_rate)
         self.chord_thread.result.connect(self.on_chords_recognized)
         self.chord_thread.start()
         self.chord_thread.wait()
-       
-    def on_tempo_detected(self, tempo):
+        chord_time = time.time() - start_time
+        print(f"Chord recognition completed in {chord_time:.2f} seconds")
+        
+    def on_tempo_recognized(self, tempo):
         """
-        Handles the result of tempo detection.
+        Handles the result of key recognition.
         """
         self.tempo = tempo
 
@@ -94,18 +117,24 @@ class DeChordCLI:
         """
         Returns the recognized chords, tempo, and key as a dictionary.
         """
+        print("\nProcessing results...")
         results = {
-            "tempo": self.tempo,
             "key": self.key,
+            "tempo": self.tempo,
             "chords": [
                 {
                     "start_time": self.format_time(start_time),
                     "end_time": self.format_time(end_time),
                     "chord": chord_label
                 }
+<<<<<<< HEAD
                 for start_time, end_time, chord_label in self.chords
             ] if self.chords else []
             
+=======
+                for start_time, end_time, chord_label in (self.chords or [])
+            ]
+>>>>>>> master
         }
         return results
 

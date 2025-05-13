@@ -126,6 +126,21 @@
     }
   }
 
+  .active-chord {
+  background-color: #ff5722;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.Chord ul li {
+  margin: 4px 0;
+  padding: 2px 8px;
+  list-style: none;
+  transition: all 0.3s ease;
+}
+
   @media (max-width: 768px) {
     .lyrics-container {
       padding: 10% 5%; // Match mobile padding from .top_inside
