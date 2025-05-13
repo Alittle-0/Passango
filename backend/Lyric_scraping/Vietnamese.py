@@ -26,3 +26,7 @@ VIETNAMESE_DIACRITIC_MAP = {
 }
 
 INVALID_CHARACTERS = "'/.!-_"
+
+SPECIAL_CHARACTERS = {
+    "rose": "rose-blackpink",
+}

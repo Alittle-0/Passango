@@ -58,6 +58,10 @@ const baseStyles = `
         padding: 15px;
         border-radius: 4px;
         margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
     .device-info {
         background-color: #f8f9fa;
@@ -95,7 +99,7 @@ export const passwordResetCodeTemplate = (userName, code) => `
     <body>
         <div class="container">
             <div class="header">
-                <img src="https://passango.com/logo.png" alt="PassanGo Logo" class="logo">
+                <img src="/Passango/frontend/logo.png" alt="PassanGo Logo" class="logo">
                 <h1>Password Reset Verification</h1>
             </div>
             <div class="content">
@@ -253,39 +257,6 @@ export const accountDeletionTemplate = (userName) => `
                     <p>If you didn't request this deletion, please contact our support team immediately.</p>
                 </div>
                 <p>If you change your mind, you can create a new account at any time.</p>
-            </div>
-            <div class="footer">
-                <p>This is an automated message, please do not reply to this email.</p>
-                <p>© ${new Date().getFullYear()} PassanGo. All rights reserved.</p>
-            </div>
-        </div>
-    </body>
-    </html>
-`;
-
-export const verificationCodeTemplate = (userName, code) => `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <style>${baseStyles}</style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <img src="https://passango.com/logo.png" alt="PassanGo Logo" class="logo">
-                <h1>Email Verification</h1>
-            </div>
-            <div class="content">
-                <p>Hello ${userName || 'valued user'},</p>
-                <p>Thank you for registering with PassanGo. Please verify your email address to complete your registration.</p>
-                <div class="info-box">
-                    <p><strong>Your verification code is:</strong></p>
-                    <div class="verification-code">
-                        ${code}
-                    </div>
-                    <p>This code will expire in 10 minutes.</p>
-                </div>
-                <p>If you didn't create an account with us, please ignore this email.</p>
             </div>
             <div class="footer">
                 <p>This is an automated message, please do not reply to this email.</p>

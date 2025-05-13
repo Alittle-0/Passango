@@ -1,258 +1,293 @@
-// src/pages/profile.scss
 .container_profile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+
+  main {
+    min-height: 100vh;
+    background-color: rgb(0, 0, 0);
+    padding: 8% 20% 5%;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-  
-    main {
-      min-height: 100vh;
-      background-color: rgb(0, 0, 0);
-      padding: 8% 20% 5%;
+    gap: 20px;
+  }
+
+  h2 {
+    font-size: 2.4rem;
+    color: white;
+  }
+
+  .profile_header {
+    padding-top: 5%;
+    display: flex;
+    justify-content: space-between;
+
+    .profile_logo {
+      border-radius: 50px;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
+  }
+
+  .user_content {
+    background-color: rgb(93, 93, 93);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    font-size: 1.3rem;
+    gap: 15px;
+    padding: 5%;
+    border-radius: 20px;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 2%;
+    }
+
+    .img_profile {
+      width: 50px;
+      height: 100%;
+    }
+
+    .avatar_upload,
+    .edit_profile,
+    .Playlists_profile,
+    .reset_profile {
+      display: flex;
+      gap: 5%;
+      width: 90%;
+      align-items: center;
+      padding: 8px 90px 8px 0;
+      margin-left: 40px;
+      border-radius: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .avatar_upload {
+      position: relative;
+    }
+
+    .avatar_upload_label {
       display: flex;
       flex-direction: column;
       gap: 20px;
+      border: 2px dashed rgb(179, 179, 179);
+      padding: 1.5rem;
+      margin: 0 auto;
+      max-width: 500px;
+      background-color: transparent;
+      cursor: pointer;
     }
-  
-    h2 {
-      font-size: 2.4rem;
-      color: white;
-    }
-  
-    .profile_header {
-      padding-top: 5%;
-      display: flex;
-      justify-content: space-between;
-  
-      img {
-        border-radius: 50px;
-        width: 100px;
-        height: 100px;
-      }
-    }
-  
-    .user_content {
-      background-color: rgb(93, 93, 93);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      font-size: 1.3rem;
-      gap: 15px;
-      padding: 5%;
-      border-radius: 20px;
-  
-      h2 {
-        font-size: 2rem;
-        margin-bottom: 2%;
-      }
-  
-      .img_profile {
-        width: 50px;
-        height: 100%;
-      }
-  
-      .edit_profile,
-      .Playlists_profile,
-      .reset_profile {
-        display: flex;
-        gap: 5%;
-        width: 90%;
-        align-items: center;
-        padding: 8px 90px 8px 0;
-        margin-left: 40px;
-        border-radius: 10px;
-        transition: background-color 0.3s ease;
-      }
-  
-      .edit_profile:hover,
-      .Playlists_profile:hover,
-      .reset_profile:hover {
-        background-color: rgba(57, 57, 57, 0.548);
-        cursor: pointer;
-      }
-    }
-  }
-  
-  // Form styles inside the modal
-  .error-message {
-    color: red;
-    text-align: center;
-    margin-bottom: 15px;
-  }
-  
-  .success-message {
-    color: green;
-    text-align: center;
-    margin-bottom: 15px;
-  }
-  
-  .profile_email,
-  .profile_newpass {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-  
-    label {
-      font-size: 1rem;
-      font-weight: 500;
-    }
-  
-    p {
-      font-size: 0.9rem;
-      color: rgb(200, 200, 200);
-      margin: 0;
-    }
-  
-    input {
-      align-self: center;
-      padding: 10px 15px;
-      width: 100%;
-      max-width: 300px;
+
+    .avatar_upload_btn {
+      padding: 8px 16px;
       background-color: rgb(110, 110, 110);
       border: 1px solid rgb(130, 130, 130);
       color: rgb(230, 230, 230);
-      font-size: 16px;
-      font-family: Arial, sans-serif;
+      font-size: 1rem;
       border-radius: 6px;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
       transition: all 0.3s ease;
-  
-      &:focus {
-        outline: none;
-        border-color: rgb(150, 150, 150);
-        background-color: rgb(120, 120, 120);
-        box-shadow: 0 0 5px rgba(150, 150, 150, 0.3);
-      }
-  
-      &::placeholder {
-        color: rgb(170, 170, 170);
-        opacity: 1;
-      }
-  
-      &:hover:not(:focus) {
-        border-color: rgb(140, 140, 140);
+      margin-left: 40px;
+
+      &:hover {
+        background-color: rgb(196, 196, 196);
+        color: black;
       }
     }
-  }
-  
-  .modal-btn {
-    padding: 10px 20px;
-    align-self: center;
-    width: 100%;
-    max-width: 300px;
-    background-color: rgb(110, 110, 110);
-    border: 1px solid rgb(130, 130, 130);
-    color: rgb(230, 230, 230);
-    font-size: 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  
-    &:hover {
-      background-color: rgb(196, 196, 196);
-      color: black;
+
+    .avatar_upload:hover,
+    .edit_profile:hover,
+    .Playlists_profile:hover,
+    .reset_profile:hover {
+      background-color: rgba(57, 57, 57, 0.548);
+      cursor: pointer;
     }
   }
-  
-  // Modal styles with animations
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    animation: fadeIn 0.3s ease forwards;
+}
+
+// Form styles inside the modal
+.error-message {
+color: red;
+text-align: center;
+margin-bottom: 15px;
+}
+
+.success-message {
+color: green;
+text-align: center;
+margin-bottom: 15px;
+}
+
+.profile_email,
+.profile_newpass {
+display: flex;
+flex-direction: column;
+gap: 10px;
+margin-bottom: 20px;
+
+label {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+p {
+  font-size: 0.9rem;
+  color: rgb(200, 200, 200);
+  margin: 0;
+}
+
+input {
+  align-self: center;
+  padding: 10px 15px;
+  width: 100%;
+  max-width: 300px;
+  background-color: rgb(110, 110, 110);
+  border: 1px solid rgb(130, 130, 130);
+  color: rgb(230, 230, 230);
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  border-radius: 6px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: rgb(150, 150, 150);
+    background-color: rgb(120, 120, 120);
+    box-shadow: 0 0 5px rgba(150, 150, 150, 0.3);
   }
-  
-  .modal-content {
-    max-width: 370px;
-    display: flex;
+
+  &::placeholder {
+    color: rgb(170, 170, 170);
+    opacity: 1;
+  }
+
+  &:hover:not(:focus) {
+    border-color: rgb(140, 140, 140);
+  }
+}
+}
+
+.modal-btn {
+padding: 10px 20px;
+align-self: center;
+width: 100%;
+max-width: 300px;
+background-color: rgb(110, 110, 110);
+border: 1px solid rgb(130, 130, 130);
+color: rgb(230, 230, 230);
+font-size: 1rem;
+border-radius: 6px;
+cursor: pointer;
+transition: all 0.3s ease;
+
+&:hover {
+  background-color: rgb(196, 196, 196);
+  color: black;
+}
+}
+
+// Modal styles with animations
+.modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: rgba(0, 0, 0, 0.5);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+opacity: 0;
+animation: fadeIn 0.3s ease forwards;
+}
+
+.modal-content {
+max-width: 370px;
+display: flex;
+flex-direction: column;
+background-color: rgb(93, 93, 93);
+padding: 40px;
+border-radius: 10px;
+position: relative;
+font-size: 1.3rem;
+color: white;
+transform: scale(0.8);
+animation: scaleIn 0.3s ease forwards;
+}
+
+.modal-title {
+font-size: 1.5rem;
+margin-bottom: 20px;
+text-align: center;
+}
+
+.modal-close-btn {
+color: white;
+position: absolute;
+top: 10px;
+right: 10px;
+border: none;
+background: none;
+font-size: 24px;
+cursor: pointer;
+transition: color 0.3s ease;
+
+&:hover {
+  color: #ff6200; // Orange accent from PassanGo branding
+}
+}
+
+// Animation keyframes
+@keyframes fadeIn {
+from {
+  opacity: 0;
+}
+to {
+  opacity: 1;
+}
+}
+
+@keyframes scaleIn {
+from {
+  transform: scale(0.8);
+}
+to {
+  transform: scale(1);
+}
+}
+
+@media (max-width: 768px) {
+.container_profile {
+  main {
+    padding: 30% 10% 5%;
+  }
+
+  .profile_header {
     flex-direction: column;
-    background-color: rgb(93, 93, 93);
-    padding: 40px;
-    border-radius: 10px;
-    position: relative;
-    font-size: 1.3rem;
-    color: white;
-    transform: scale(0.8);
-    animation: scaleIn 0.3s ease forwards;
-  }
-  
-  .modal-title {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
+    align-items: center;
+    gap: 20px;
     text-align: center;
-  }
-  
-  .modal-close-btn {
-    color: white;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    border: none;
-    background: none;
-    font-size: 24px;
-    cursor: pointer;
-    transition: color 0.3s ease;
-  
-    &:hover {
-      color: #ff6200; // Orange accent from PassanGo branding
+    padding-top: 25%;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .profile_logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto;
+      display: block;
     }
   }
-  
-  // Animation keyframes
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  @keyframes scaleIn {
-    from {
-      transform: scale(0.8);
-    }
-    to {
-      transform: scale(1);
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .container_profile {
-      main {
-        padding: 30% 10% 5%;
-      }
-  
-      .profile_header {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        text-align: center;
-        padding-top: 25%;
-  
-        h2 {
-          font-size: 2rem;
-          margin-bottom: 10px;
-          width: 100%;
-          text-align: center;
-        }
-  
-        img {
-          width: 80px;
-          height: 80px;
-          margin: 0 auto;
-          display: block;
-        }
-      }
-    }
-  }
+}
+}

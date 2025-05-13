@@ -1,52 +1,40 @@
 // src/pages/ResetPassword.jsx
-import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 function ResetPassword() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const tempToken = location.state?.tempToken || '';
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
-  const token = searchParams.get('token');
-
-  useEffect(() => {
-    if (!token) {
-      setError('Invalid or missing reset token');
-    }
-  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
+    if (!tempToken || !newPassword) {
+      setError('Token and new password are required');
+      return;
+    }
     if (newPassword !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/reset-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token, newPassword }),
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/reset-password`, {
+        tempToken,
+        newPassword,
       });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to reset password');
-      }
-
-      setSuccess(data.message);
+      setSuccess(response.data.message);
       setTimeout(() => navigate('/login'), 3000);
     } catch (err) {
-      console.error('Reset password error:', err);
-      setError(err.message);
+      setError(err.response?.data?.message || 'Failed to reset password');
     }
   };
 

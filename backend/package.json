@@ -16,6 +16,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
+    "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "esm": "^3.2.25",
@@ -29,6 +30,7 @@
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
     "port": "^0.8.1",
+    "yarn": "^1.22.22",
     "zxcvbn": "^4.4.2"
   }
 }
