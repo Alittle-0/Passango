@@ -11,6 +11,7 @@ import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
 import Lyric from '../pages/Lyric';
 import Template from '../pages/Template';
+import Loading from '../pages/Loading';
 
 function AppRoutes() {
   return (
@@ -26,6 +27,8 @@ function AppRoutes() {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/lyric" element={<Lyric />} />
       <Route path="/template" element={<Template />} />
+      <Route path="/loading" element={<Loading />} />
+      
     </Routes>
   );
 }
