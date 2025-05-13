@@ -6,6 +6,7 @@ from scipy import signal
 
 from Chord_detection.chords import ChordRecognitionThread
 from Chord_detection.key import AudioKeyRecognition
+from Chord_detection.tempo import TempoRecognitionThread
 
 
 class DeChordCLI:
@@ -63,6 +64,16 @@ class DeChordCLI:
         # Calculate duration in seconds
         duration = len(data) / sample_rate
         print(f"Audio duration: {self.format_time(duration)}")
+        
+        # Start tempo recognition
+        print("\nStarting tempo recognition...")
+        start_time = time.time()
+        self.tempo_thread = TempoRecognitionThread(data, sample_rate)
+        self.tempo_thread.result.connect(self.on_tempo_recognized)
+        self.tempo_thread.start()
+        self.tempo_thread.wait()
+        tempo_time = time.time() - start_time
+        print(f"Tempo recognition completed in {tempo_time:.2f} seconds")
 
         # Start key recognition
         print("\nStarting key recognition...")
@@ -83,6 +94,12 @@ class DeChordCLI:
         self.chord_thread.wait()
         chord_time = time.time() - start_time
         print(f"Chord recognition completed in {chord_time:.2f} seconds")
+        
+    def on_tempo_recognized(self, tempo):
+        """
+        Handles the result of key recognition.
+        """
+        self.tempo = tempo
 
     def on_key_recognized(self, key):
         """
@@ -103,6 +120,7 @@ class DeChordCLI:
         print("\nProcessing results...")
         results = {
             "key": self.key,
+            "tempo": self.tempo,
             "chords": [
                 {
                     "start_time": self.format_time(start_time),
