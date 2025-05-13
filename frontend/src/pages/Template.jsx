@@ -236,10 +236,10 @@ function Template() {
         </div>
       </section>
       <div className="Chord">
-        <p>Chord is supposed to be here</p>
-        <br/>
         <ul>
-          {chords.map((chord, index) => (
+          <p>Key: {key}</p>
+          <br/>
+          {chords && chords.map((chord, index) => (
             <li key={index}>
               {chord.start_time} - {chord.end_time}: {chord.chord}
             </li>
