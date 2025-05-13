@@ -127,14 +127,8 @@ class DeChordCLI:
                     "end_time": self.format_time(end_time),
                     "chord": chord_label
                 }
-<<<<<<< HEAD
-                for start_time, end_time, chord_label in self.chords
-            ] if self.chords else []
-            
-=======
                 for start_time, end_time, chord_label in (self.chords or [])
             ]
->>>>>>> master
         }
         return results
 

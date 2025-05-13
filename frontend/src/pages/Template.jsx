@@ -4,246 +4,154 @@ import { useLocation } from "react-router-dom";
 
 function Template() {
   const location = useLocation();
-  const { lyrics, song, artist, chords, tempo, key } = location.state || {};
-  const [progress, setProgress] = useState(0); // Track progress for the slider
-  const [isPaused, setIsPaused] = useState(false); // Track paused state for UI
-  const animatorRef = useRef(null); // Store the ParagraphAnimator instance
-
+  const [currentDetail, setCurrentDetail] = useState(
+    location.state || {
+      lyrics: "",
+      song: "",
+      artist: "",
+      chords: [],
+      tempo: 0,
+      key: "",
+      audio: null,
+    }
+  );
+  const currentAudio = useRef();
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [totalLength, setTotalLength] = useState("00 : 00");
+  const [currentTime, setCurrentTime] = useState("00 : 00");
+  
   useEffect(() => {
-    if (!lyrics) return;
-
-    class ParagraphAnimator {
-      constructor(paragraph, index, setProgressCallback) {
-        this.paragraph = paragraph;
-        this.container = document.createElement("div");
-        this.container.className = "paragraph-container";
-        this.container.id = `paragraph-${index}`;
-        this.paragraph.parentNode.replaceChild(this.container, this.paragraph);
-        this.sentences = this.splitSentences(paragraph.textContent);
-        this.currentIndex = 0;
-        this.sentenceElements = [];
-        this.baseInterval = 2000;
-        this.baseTransition = 700;
-        this.tempo = 1.0//set by the time of chord(tempo)
-        this.averageLength = 30;
-        this.setProgressCallback = setProgressCallback; // Callback to update progress
-        this.isPaused = false; // Track paused state
-        this.init();
-      }
-
-      splitSentences(text) {
-        return text
-          .split("\n")
-          .map((s) => s.trim())
-          .filter((s) => s.length > 0);
-      }
-
-      calculateInterval(sentence) {
-        const lengthFactor = sentence.length / this.averageLength;
-        const interval = Math.max(
-          1000,
-          this.baseInterval * lengthFactor * this.tempo
-        );
-        return interval;
-      }
-
-      calculateTransitionDuration(interval) {
-        const duration = this.baseTransition * (interval / this.baseInterval);
-        return duration.toFixed(2);
-      }
-
-      init() {
-        this.sentences.forEach((sentence, i) => {
-          const div = document.createElement("div");
-          div.textContent = sentence;
-          div.className = "sentence hidden";
-          this.container.appendChild(div);
-          this.sentenceElements.push(div);
-        });
-        this.updateDisplay();
-      }
-
-      updateDisplay() {
-        if (this.isPaused) return;
-
-        const currentSentence = this.sentences[this.currentIndex] || "";
-        const interval = this.calculateInterval(currentSentence);
-        const transitionDuration = this.calculateTransitionDuration(interval);
-
-        this.sentenceElements.forEach((div) => {
-          div.style.setProperty(
-            "--transition-duration",
-            `${transitionDuration}ms`
-          );
-        });
-
-        this.sentenceElements.forEach((div, i) => {
-          div.className = "sentence hidden";
-          if (i === this.currentIndex - 2) {
-            div.className = "sentence exiting";
-          } else if (i === this.currentIndex - 1) {
-            div.className = "sentence previous";
-          } else if (i === this.currentIndex) {
-            div.className = "sentence current";
-          } else if (i === this.currentIndex + 1) {
-            div.className = "sentence next start";
-            void div.offsetWidth;
-            div.className = "sentence next";
-          }
-        });
-
-        // Update progress for the slider
-        const progressPercentage =
-          (this.currentIndex / (this.sentences.length - 1)) * 100;
-        this.setProgressCallback(progressPercentage);
-
-        clearTimeout(this.nextTimeout);
-        this.nextTimeout = setTimeout(() => {
-          if (this.currentIndex < this.sentences.length - 1) {
-            this.currentIndex++;
-            this.updateDisplay();
-          } else {
-            this.setProgressCallback(100); // Ensure progress reaches 100% at the end
-          }
-        }, interval);
-      }
-
-      // Replay the animation from the beginning
-      replay() {
-        this.currentIndex = 0;
-        this.isPaused = false;
-        this.updateDisplay();
-      }
-
-      // Seek to a specific point in the animation based on progress (0 to 100)
-      seek(progress) {
-        this.isPaused = false;
-        const targetIndex = Math.round(
-          (progress / 100) * (this.sentences.length - 1)
-        );
-        this.currentIndex = Math.min(
-          Math.max(targetIndex, 0),
-          this.sentences.length - 1
-        );
-        this.updateDisplay();
-      }
-
-      // Pause the animation
-      pause() {
-        this.isPaused = true;
-        clearTimeout(this.nextTimeout);
-      }
-
-      // Resume the animation
-      resume() {
-        if (this.isPaused) {
-          this.isPaused = false;
-          this.updateDisplay();
-        }
-      }
-    }
-
-    // Initialize animation
-    const lyricContainer = document.querySelector(".lyric-script p");
-    if (lyricContainer && lyrics) {
-      lyricContainer.textContent = lyrics;
-      animatorRef.current = new ParagraphAnimator(
-        lyricContainer,
-        0,
-        setProgress
-      );
-    }
-
+    console.log('Audio URL:', currentDetail.audio);
     return () => {
-      clearTimeout(window.nextTimeout);
+      // Cleanup object URL when component unmounts
+      if (currentDetail.audio && currentDetail.audio.startsWith("blob:")) {
+        URL.revokeObjectURL(currentDetail.audio);
+      }
     };
-  }, [lyrics]);
+  }, [currentDetail.audio]);
 
-  // Handle replay button click
-  const handleReplay = () => {
-    if (animatorRef.current) {
-      animatorRef.current.replay();
-      setIsPaused(false);
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes.toString().padStart(2, "0")} : ${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  // Enhanced audio event handlers
+  const handleAudioPlay = async () => {
+    try {
+      if (!currentAudio.current) return;
+
+      if (currentAudio.current.paused) {
+        await currentAudio.current.play();
+        setIsAudioPlaying(true);
+      } else {
+        currentAudio.current.pause();
+        setIsAudioPlaying(false);
+      }
+    } catch (error) {
+      console.error("Error playing audio:", error);
     }
   };
 
-  // Handle pause button click
-  const handlePause = () => {
-    if (animatorRef.current) {
-      animatorRef.current.pause();
-      setIsPaused(true);
+  const handleReplay = async () => {
+    try {
+      if (!currentAudio.current) return;
+
+      currentAudio.current.currentTime = 0;
+      setAudioProgress(0);
+      setCurrentTime("00 : 00");
+      await currentAudio.current.play();
+      setIsAudioPlaying(true);
+    } catch (error) {
+      console.error("Error replaying audio:", error);
+      setIsAudioPlaying(false);
     }
   };
 
-  // Handle continue button click
-  const handleContinue = () => {
-    if (animatorRef.current) {
-      animatorRef.current.resume();
-      setIsPaused(false);
+  const handleMusicProgressBar = (e) => {
+    try {
+      if (!currentAudio.current) return;
+
+      const value = parseFloat(e.target.value);
+      if (isNaN(value)) return;
+
+      setAudioProgress(value);
+      currentAudio.current.currentTime =
+        (value * currentAudio.current.duration) / 100;
+    } catch (error) {
+      console.error("Error updating progress:", error);
     }
   };
 
-  // Handle progress slider change
-  const handleProgressChange = (e) => {
-    const newProgress = Number(e.target.value);
-    setProgress(newProgress);
-    if (animatorRef.current) {
-      animatorRef.current.seek(newProgress);
-      setIsPaused(false); // Resume animation when seeking
+  const handleAudioUpdate = () => {
+    try {
+      if (!currentAudio.current) return;
+
+      const { currentTime, duration } = currentAudio.current;
+      setTotalLength(formatTime(duration));
+      setCurrentTime(formatTime(currentTime));
+
+      const progress = (currentTime / duration) * 100;
+      setAudioProgress(isNaN(progress) ? 0 : progress);
+    } catch (error) {
+      console.error("Error updating audio time:", error);
     }
   };
 
-  if (!lyrics) {
+  if (!currentDetail.lyrics) {
     return <div>No lyrics found. Please go back and try again.</div>;
   }
 
   return (
     <div className="lyric-style">
       <section className="lyrics-container">
+        <audio
+          src={currentDetail.audio}
+          ref={currentAudio}
+          preload="auto"
+          onEnded={handleReplay}
+          onTimeUpdate={handleAudioUpdate}
+        ></audio>
         <div className="lyric-script">
           <h1>
-            {song} by {artist}
+            {currentDetail.song} by {currentDetail.artist}
           </h1>
-          <p>{lyrics}</p>
+          <p>{currentDetail.lyrics}</p>
           {/* Playback controls moved inside .lyric-script */}
           <div className="playback-controls">
             <button onClick={handleReplay} className="replay-btn">
               Replay
             </button>
-            <button
-              onClick={handlePause}
-              className="pause-btn"
-              disabled={isPaused}
-            >
-              Pause
+            <button onClick={handleAudioPlay} className="continue-btn">
+              {isAudioPlaying ? "Pause" : "Play"}
             </button>
-            <button
-              onClick={handleContinue}
-              className="continue-btn"
-              disabled={!isPaused}
-            >
-              Continue
-            </button>
+          </div>
+          <div className="musicTimer">
+            <p className="currentTime">{currentTime}</p>
+            <p className="totalTime">{totalLength}</p>
           </div>
           <input
             type="range"
-            min="0"
-            max="100"
-            value={progress}
-            onChange={handleProgressChange}
-            className="progress-slider"
+            name="musicProgressBar"
+            className="musicProgressBar"
+            value={audioProgress}
+            onChange={handleMusicProgressBar}
           />
         </div>
       </section>
       <div className="Chord">
         <ul>
-          <p>Key: {key}</p>
-          <br/>
-          {chords && chords.map((chord, index) => (
-            <li key={index}>
-              {chord.start_time} - {chord.end_time}: {chord.chord}
-            </li>
-          ))}
+          <p>Key: {currentDetail.key}</p>
+          <br />
+          {currentDetail.chords &&
+            currentDetail.chords.map((chord, index) => (
+              <li key={index}>
+                {chord.start_time} - {chord.end_time}: {chord.chord}
+              </li>
+            ))}
         </ul>
       </div>
     </div>

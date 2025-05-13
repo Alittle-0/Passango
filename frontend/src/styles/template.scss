@@ -249,3 +249,21 @@
     font-size: 0.8rem;
   }
 }
+
+//Phi Hung fucks up
+
+.musicTimer{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: 600;
+}
+
+.musicProgressBar{
+  width: 100%;
+  margin-bottom: 16px;
+  height: 10px;
+  border-radius: 5px;
+  outline: none;
+  filter: hue-rotate(20deg);
+}

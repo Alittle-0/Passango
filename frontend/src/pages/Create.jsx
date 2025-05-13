@@ -13,7 +13,6 @@ function Create() {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    console.log("Selected file:", selectedFile);
     setFile(selectedFile);
   };
 
@@ -45,21 +44,16 @@ function Create() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true); // Show loading component
+    setIsLoading(true);
 
-    if (!file) {
-      console.log("Please select a file to upload");
-      ansible
-      setError("Please select a file to upload");
-      setIsLoading(false); // Hide loading component
-      return;
-    }
-
-    console.log(file);
-    const formData = new FormData();
-    formData.append("audio", file);
+    if (!file.type === "audio/mpeg") return
 
     try {
+      const audioUrl = URL.createObjectURL(file);
+
+      const formData = new FormData();
+      formData.append("audio", file);
+
       const chord_response = await fetch(
         "http://localhost:8000/api/get-chord",
         {
@@ -91,6 +85,7 @@ function Create() {
             chords: chord_data.results.chords,
             tempo: chord_data.results.tempo,
             key: chord_data.results.key,
+            audio: audioUrl,
           },
         });
       } else {
@@ -102,11 +97,10 @@ function Create() {
       setError("Error connecting to the server");
       console.log(error);
     } finally {
-      setIsLoading(false); // Hide loading component
+      setIsLoading(false);
     }
   };
 
-  // Render Loading component if isLoading is true
   if (isLoading) {
     return <Loading />;
   }
