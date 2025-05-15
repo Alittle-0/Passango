@@ -12,7 +12,7 @@ import ResetPassword from '../pages/ResetPassword';
 import Lyric from '../pages/Lyric';
 import Template from '../pages/Template';
 import Loading from '../pages/Loading';
-
+import VerificationPopup from '../components/VerificationPopup';
 function AppRoutes() {
   return (
     <Routes>
@@ -28,7 +28,8 @@ function AppRoutes() {
       <Route path="/lyric" element={<Lyric />} />
       <Route path="/template" element={<Template />} />
       <Route path="/loading" element={<Loading />} />
-      
+      <Route path="/verification-popup" element={<VerificationPopup />} />
+      {/* Add more routes as needed */}
     </Routes>
   );
 }

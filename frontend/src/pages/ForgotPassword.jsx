@@ -1,7 +1,7 @@
 // src/pages/ForgotPassword.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import VerificationPopup from './VerificationPopup';
+import VerificationPopup from '../components/VerificationPopup';
 
 function ForgotPassword() {
   const navigate = useNavigate();
