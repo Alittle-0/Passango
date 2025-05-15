@@ -120,21 +120,15 @@ class DeChordCLI:
         print("\nProcessing results...")
         results = {
             "key": self.key,
-            "tempo": self.tempo,
+            "tempo": float(self.tempo),
             "chords": [
                 {
                     "start_time": self.format_time(start_time),
                     "end_time": self.format_time(end_time),
                     "chord": chord_label
                 }
-<<<<<<< HEAD
-                for start_time, end_time, chord_label in self.chords
-            ] if self.chords else []
-            
-=======
                 for start_time, end_time, chord_label in (self.chords or [])
-            ]
->>>>>>> master
+            ],
         }
         return results
 
