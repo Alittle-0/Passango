@@ -47,10 +47,9 @@ function Create() {
     setError("");
     setIsLoading(true); // Show loading component
 
-    if (!file) {
-      console.log("Please select a file to upload");
-      setError("Please select a file to upload");
-      setIsLoading(false); // Hide loading component
+    if (!file || !(file.type === "audio/mpeg" || file.type === "audio/wav")) {
+      setError("Please upload a valid MP3 or WAV file");
+      setIsLoading(false);
       return;
     }
 
