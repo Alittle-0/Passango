@@ -6,7 +6,7 @@ console.log('EMAIL_PORT:', process.env.EMAIL_PORT);
 console.log('EMAIL_USER:', process.env.EMAIL_USER);
 console.log('EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD ? '***' : undefined);
 import express from 'express';
-import mongoose from 'mongoose';
+import connect from './config/db.js';
 import cors from 'cors';
 
 import authRoutes from './routes/auth.js';
@@ -101,10 +101,7 @@ app.post('upload-audio', upload.single('audio'), async (req, res) => {
 });
 
 // Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI) // Remove deprecated options
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+connect();
 
 // Start the server
 const PORT = process.env.NODE_PORT || 3000;
