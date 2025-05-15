@@ -14,6 +14,10 @@ def chord_routes(app):
     def upload_audio():
         try:
             # Check if a file is included in the request
+            print(request.content_type)
+            print(request.files)
+            print(request.form)
+
             if 'audio' not in request.files:
                 return jsonify({'error': 'No audio file provided'}), 400
 

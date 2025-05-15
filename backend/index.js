@@ -14,6 +14,9 @@ import audioRoutes from './routes/audio.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+
+
+
 // Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,8 +41,8 @@ if (!process.env.MONGO_URI) {
   process.exit(1); // Exit the process with an error code
 }
 
-const app = express();
 
+const app = express();
 // Configure CORS
 app.use(cors({
   origin: '*', // Allow all origins during development
@@ -70,6 +73,31 @@ app.use((err, req, res, next) => {
 // Add a root route for testing
 app.get('/', (req, res) => {
   res.send('Welcome to the PassanGo Backend API! Use /api/auth or /api/audio endpoints.');
+});
+
+// Multer for file uploads
+import multer from 'multer';
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '.file')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now()
+    cb(null, uniqueSuffix.file.originalname)
+  }
+})
+
+const upload = multer({ storage: storage })
+
+app.post('upload-audio', upload.single('audio'), async (req, res) => {
+  try {
+    console.log('File uploaded:', req.file);
+    res.json({ message: 'File uploaded successfully', file: req.file });
+  } catch (error) {
+    console.error('Error processing file:', error);
+    return res.status(500).json({ message: 'Error processing file' });
+  }
 });
 
 // Connect to MongoDB
