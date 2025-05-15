@@ -1,0 +1,68 @@
+.verification-popup {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.verification-content {
+    background: #ffffff;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    min-width: 340px;
+    position: relative;
+    text-align: center;
+}
+.close-button-verification {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    &:hover{
+    cursor: pointer;
+    }
+}
+
+.verification-inputs {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+.verification-inputs input {
+    width: 2.5rem;
+    height: 2.5rem;
+    text-align: center;
+    margin: 0 0.3rem;
+    font-size: 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+.verify-button, .resend-button {
+    width: 100%;
+    background-color: black;
+    color: #ffffff;
+    padding: 20px 30px;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    border-radius:  50px; ;
+    transition: all 0.7s ease;
+}
+  button:hover {
+    background-color: gray;
+    color: black;
+    transform: scale(1.05);
+    }
+.resend-code {
+    margin-top: 1rem;
+    gap:1rem;
+    font-size: 1rem;
+    display:  flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

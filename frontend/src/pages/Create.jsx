@@ -49,7 +49,6 @@ function Create() {
 
     if (!file) {
       console.log("Please select a file to upload");
-      ansible
       setError("Please select a file to upload");
       setIsLoading(false); // Hide loading component
       return;

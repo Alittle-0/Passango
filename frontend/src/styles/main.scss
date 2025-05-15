@@ -8,7 +8,7 @@
 @import 'featured';
 @import 'subscription';
 @import 'searchbar';
-
+@import 'modal';
 // Import page-specific styles
 @import 'get-started';
 @import 'about';
@@ -20,3 +20,5 @@
 @import 'forget';
 @import 'template';
 @import 'loading';  
+@import 'verification-popup';
+@import 'resetpassword';

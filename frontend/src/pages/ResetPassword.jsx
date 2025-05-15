@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 function ResetPassword() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,12 +40,13 @@ function ResetPassword() {
   };
 
   return (
-    <div className="container">
-      <div className="form-section">
-        <div className="logo">
-          <span>♪</span> PassanGo
-        </div>
-        <div className="form-wrapper">
+    <div>
+       <Header />  
+    <div className="container_reset-password">
+         
+      <div className="form-section_reset-password">
+      
+        <div className="form-wrapper_reset-password">
           <form onSubmit={handleSubmit}>
             <h2>Reset Password</h2>
             {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
@@ -67,7 +69,7 @@ function ResetPassword() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
-            <button type="submit" className="btn btn-login">
+            <button type="submit" className="button_reset-password">
               Reset Password
             </button>
             <p>
@@ -78,7 +80,9 @@ function ResetPassword() {
           </form>
         </div>
       </div>
-      <div className="image-section"></div>
+      <div className="image-section_reset-password"></div>
+    </div>
+    <Footer/>
     </div>
   );
 }
