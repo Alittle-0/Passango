@@ -8,18 +8,17 @@
   color: #cbbd9b;
   
   .quote_inside {
-    //margin-top: 5%;
-    padding-top: 10%; 
+    padding-top: 15%; 
     display: flex;
     width: 50%;
     gap:30px;
     flex-direction: column;
     h2 {
-      font-size: 2rem;
+      font-size: 2.4rem;
     }
 
     p {
-      font-size: 1rem;
+      font-size: 1.2rem;
       align-self: flex-start;
     }
   }
@@ -44,7 +43,7 @@
     gap: 20px; // Fixed gap value
 
     .quote_inside {
-      padding-top: 34%; // Reduced padding-top for mobile
+      padding-top: 38%; // Reduced padding-top for mobile
       width: 100%;
       gap: 15px; // Slightly smaller gap for mobile
 
@@ -80,12 +79,12 @@
   text-align: center;
 
   h2 {
-    font-size: 2rem;
+    font-size: 2.4rem;
     margin-bottom: 30px;
   }
 
   section {
-    font-size: 1rem;
+    font-size: 1.2rem;
     line-height: 1.6;
     max-width: 800px;
     width: 100%;
