@@ -1,9 +1,18 @@
 // src/pages/Template.jsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, use } from "react";
 import { useLocation } from "react-router-dom";
 
 function Template() {
   const location = useLocation();
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+  const { lyrics, song, artist, chords, tempo, key } = location.state || {};
+  const [progress, setProgress] = useState(0); // Track progress for the slider
+  const [isPaused, setIsPaused] = useState(false); // Track paused state for UI
+  const animatorRef = useRef(null); // Store the ParagraphAnimator instance
+=======
+=======
+>>>>>>> master
   const [currentDetail, setCurrentDetail] = useState(
     location.state || {
       lyrics: "",
@@ -16,17 +25,30 @@ function Template() {
       mimetype: "",
     }
   );
+<<<<<<< HEAD
+
+  const [semitones,setSemitones]=useState('0');
+=======
+>>>>>>> master
   const currentAudio = useRef();
   const [audioProgress, setAudioProgress] = useState(0);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [totalLength, setTotalLength] = useState("00 : 00");
   const [currentTime, setCurrentTime] = useState("00 : 00");
   const [audioUrl, setAudioUrl] = useState(null);
+<<<<<<< HEAD
+  const [currentChordIndex, setCurrentChordIndex] = useState(0);
+=======
   const [currentChordIndex, setCurrentChordIndex] = useState(-1);
+>>>>>>> master
   const [previousChord, setPreviousChord] = useState(null);
   const [nextChord, setNextChord] = useState(null);
 
   console.log("test");
+<<<<<<< HEAD
+ 
+=======
+>>>>>>> master
   useEffect(() => {
     // Convert Base64 audio to Blob and create URL
     if (currentDetail.audio) {
@@ -63,6 +85,10 @@ function Template() {
   }, [currentDetail.audio, currentDetail.mimetype]);
 
   const chordListRef = useRef(null);
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+>>>>>>> master
 
   useEffect(() => {
     if (currentChordIndex >= 0 && chordListRef.current) {
@@ -185,21 +211,85 @@ function Template() {
   if (!currentDetail.lyrics) {
     return <div>No lyrics found. Please go back and try again.</div>;
   }
+  // Handle semitones change
+   const handleSemitonesChange = (e) => {
+    if (semitones>=10||semitones<=-10){
+      if (e.target.value === "+"&& semitones===-10) {
+        setSemitones(-9);
+      }
+      else if (e.target.value === "-"&& semitones===10) {
+        setSemitones(9);
+      }
+      else{alert("Please select a value between -10 and 10");}
 
+      return;
+    }
+    if (e.target.value === "+"||semitones>=10) {
+      setSemitones((prev) => parseInt(prev) + 1);
+    }
+    if (e.target.value === "-") {
+      setSemitones((prev) => parseInt(prev) - 1);
+    }
+  };
   return (
     <div className="lyric-style">
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+      <section className="lyrics-container">
+        <div className="lyric-script">
+          <h1>
+            {song} by {artist}
+          </h1>
+          <p>{lyrics}</p>
+          {/* Playback controls moved inside .lyric-script */}
+          <div className="playback-controls">
+            <button onClick={handleReplay} className="replay-btn">
+              Replay
+            </button>
+            <button
+              onClick={handlePause}
+              className="pause-btn"
+              disabled={isPaused}
+            >
+              Pause
+            </button>
+            <button
+              onClick={handleContinue}
+              className="continue-btn"
+              disabled={!isPaused}
+            >
+              Continue
+            </button>
+=======
+      <div className="main-container">
+        <div className="chord-section">
+          <div className="chord-display">
+            <div className="chord-info">
+              <h2>Key: {currentDetail.key}</h2>
+              <div className="tempo-info">
+                <button value='-' onClick={handleSemitonesChange}>-</button>
+                {semitones}
+                <button value='+' onClick={handleSemitonesChange}>+</button>
+              </div>
+            </div>
+=======
       <div className="main-container">
         <div className="chord-section">
           <div className="chord-display">
             <p>Key: {currentDetail.key}</p>
+>>>>>>> master
             <div className="chord-progression">
               {/* Previous Chord */}
               <div className="chord-slot previous">
                 {previousChord && (
                   <div className="chord-content">
+<<<<<<< HEAD
+                    
+=======
                     <div className="chord-timing">
                       {previousChord.start_time} - {previousChord.end_time}
                     </div>
+>>>>>>> master
                     <div className="chord-name">{previousChord.chord}</div>
                   </div>
                 )}
@@ -209,10 +299,14 @@ function Template() {
               <div className="chord-slot current">
                 {currentChordIndex >= 0 && currentDetail.chords && (
                   <div className="chord-content">
+<<<<<<< HEAD
+                    
+=======
                     <div className="chord-timing">
                       {currentDetail.chords[currentChordIndex].start_time} -{" "}
                       {currentDetail.chords[currentChordIndex].end_time}
                     </div>
+>>>>>>> master
                     <div className="chord-name">
                       {currentDetail.chords[currentChordIndex].chord}
                     </div>
@@ -224,9 +318,13 @@ function Template() {
               <div className="chord-slot next">
                 {nextChord && (
                   <div className="chord-content">
+<<<<<<< HEAD
+                    
+=======
                     <div className="chord-timing">
                       {nextChord.start_time} - {nextChord.end_time}
                     </div>
+>>>>>>> master
                     <div className="chord-name">{nextChord.chord}</div>
                   </div>
                 )}
@@ -254,6 +352,10 @@ function Template() {
               value={audioProgress}
               onChange={handleMusicProgressBar}
             />
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+>>>>>>> master
           </div>
         </div>
 

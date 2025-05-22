@@ -14,7 +14,7 @@ function Featured({ onDiscoverClick }) {
         </div>
         <div className="card">
           <img src="public/images/music 2.png" alt="Headphones with waveform icon" />
-          <button onClick={onDiscoverClick} aria-label="Tab detection" >Tab detection</button>
+          <button onClick={onDiscoverClick} aria-label="Tab detection" >Lyrics detection</button>
         </div>
       </div>
     </section>

@@ -24,18 +24,18 @@ function Header() {
           {user ? (
             <>
               <li>
-                <a href="#" onClick={() => navigate('/inside')} className='Header_a'>
+                <a href="/inside" onClick={() => navigate('/inside')} className='Header_a'>
                   Home
                 </a>
               </li>
               <li>
-                <a href="#" onClick={() => navigate('/create')} className='Header_a'>
+                <a href="/create" onClick={() => navigate('/create')} className='Header_a'>
                   Create
                 </a>
               </li>
               <li>
-                <a href="#" onClick={() => navigate('/profile')} className='Header_a'>
-                  Profile
+                <a href="/profile"  className='Header_a'>
+                    <img src={user.avatar ? `${import.meta.env.VITE_API_URL}/uploads/avatars/${user.avatar}` : '/images/default_avatar.png'} className='header_pic'  />
                 </a>
               </li>
               <li>
@@ -61,6 +61,7 @@ function Header() {
                   Sign Up
                 </a>
               </li>
+              
             </>
           )}
         </ul>

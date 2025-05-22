@@ -38,12 +38,17 @@ header {
         &:hover{
           transform: scale(1.1); 
         }
+        .header_pic{
+          width: 100%;
+          border-radius: 50%;
+
+        }
       }
     }
   }
 
   .logo_header {
-    display: flex; 
+    display: flex ; 
     align-items: center;
     
 
