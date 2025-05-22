@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Modal from "../components/Modal";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Modal from '../components/Modal';
 
 function Profile() {
   const navigate = useNavigate();
@@ -13,40 +13,33 @@ function Profile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        navigate("/login");
+        navigate('/login');
         return;
       }
 
       try {
-        const timeoutId = setTimeout(async () => {
-          const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/api/auth/me`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.message || "Failed to fetch user");
-          }
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to fetch user');
+        }
 
-          setUser(data);
-        }, 300); // 300ms delay
-
-        return () => clearTimeout(timeoutId);
+        setUser(data);
       } catch (err) {
-        console.error("Fetch user error:", err);
+        console.error('Fetch user error:', err);
         setError(err.message);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        navigate("/login");
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/login');
       } finally {
         setIsLoading(false);
       }
@@ -91,11 +84,7 @@ function Profile() {
           <h2>User Profile</h2>
           {user && (
             <img
-              src={
-                user.avatar?.data
-                  ? `data:${user.avatar.contentType};base64,${user.avatar.data}`
-                  : "/images/default_avatar.png"
-              }
+              src={user.avatar ? `${import.meta.env.VITE_API_URL}/uploads/avatars/${user.avatar}` : '/images/default_avatar.png'}
               className="profile_logo"
               alt="Profile Avatar"
             />
@@ -104,27 +93,19 @@ function Profile() {
         <div className="user_content">
           <h2>ACCOUNT</h2>
           <div className="edit_profile" onClick={() => setIsModalOpen(true)}>
-            <img
-              src="/images/pen_icon.png"
-              className="img_profile"
-              alt="Edit Icon"
-            />
+            <img src="/images/pen_icon.png" className="img_profile" alt="Edit Icon" />
             <p>Edit profile</p>
           </div>
           <div className="Playlists_profile">
-            <img
-              src="/images/list_icon.png"
-              className="img_profile"
-              alt="Playlists Icon"
-            />
+            <img src="/images/list_icon.png" className="img_profile" alt="Playlists Icon" />
             <p>Recent playlists</p>
           </div>
           {user && (
-            <Modal
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-              title="Update Profile"
-              user={user}
+            <Modal 
+              isOpen={isModalOpen} 
+              onClose={() => setIsModalOpen(false)} 
+              title="Update Profile" 
+              user={user} 
               setUser={setUser}
             />
           )}

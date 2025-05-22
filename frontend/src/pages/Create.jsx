@@ -69,7 +69,7 @@ function Create() {
 
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/audio/upload-audio`,
+        "http://localhost:3000/api/audio/upload-audio",
         {
           method: "POST",
           body: formData,

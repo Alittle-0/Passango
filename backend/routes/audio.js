@@ -6,11 +6,9 @@ import { Readable } from 'stream';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
 import Audio from '../models/audio.js';
-import dotenv from 'dotenv';
 import authMiddleware from '../middleware/auth.js';
 
 const router = express.Router();
-dotenv.config();
 
 // Configure multer to store files in memory
 const upload = multer({
@@ -19,12 +17,13 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024 // 10MB limit
   },
   fileFilter: (req, file, cb) => {
+    console.log('Uploaded file MIME type:', file.mimetype);
     const filetypes = /audio\/wav|audio\/mp3|audio\/mpeg/;
     const mimetype = filetypes.test(file.mimetype);
     if (mimetype) {
       cb(null, true);
     } else {
-      cb(new Error('Only MP3 and WAV files are allowed'), false);
+      cb(new Error('Only MP3 and WAV files are allowed'));
     }
   }
 })
@@ -45,7 +44,7 @@ router.post('/upload-audio', upload.single('audio'), async (req, res) => {
 
     console.log('Sending request to chord recognition service...');
     const chord_response = await fetch(
-      `${process.env.PYTHON_PORT}/api/get-chord`,
+      "http://127.0.0.1:8000/api/get-chord",
       {
         method: "POST",
         headers: chordFormData.getHeaders(),
@@ -55,7 +54,7 @@ router.post('/upload-audio', upload.single('audio'), async (req, res) => {
     
     console.log('Sending request to lyric recognition service...');
     const lyric_response = await fetch(
-      `${process.env.PYTHON_PORT}/api/get-lyrics`,
+      "http://127.0.0.1:8000/api/get-lyrics",
       {
         method: "POST",
         headers: {

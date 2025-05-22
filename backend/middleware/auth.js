@@ -1,7 +1,5 @@
 // middleware/auth.js
 import jwt from 'jsonwebtoken';
-import fs from 'fs/promises';
-import path from 'path';
 
 const authMiddleware = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -98,20 +96,5 @@ const refreshToken = async (req, res, next) => {
   }
 };
 
-// Set default avatar for new users
-const getDefaultAvatar = async () => {
-  try {
-    const avatarPath = path.join(process.cwd(), 'avatars', 'default_avatar.png');
-    const imageBuffer = await fs.readFile(avatarPath);
-    return {
-      data: imageBuffer.toString('base64'),
-      contentType: 'image/png'
-    };
-  } catch (error) {
-    console.error('Error loading default avatar:', error);
-    return null;
-  }
-};
-
-export { authMiddleware, isLoggedIn, requireRole, apiKeyAuth, refreshToken, getDefaultAvatar };
+export { authMiddleware, isLoggedIn, requireRole, apiKeyAuth, refreshToken };
 export default authMiddleware;

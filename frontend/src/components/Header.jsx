@@ -1,35 +1,14 @@
 // src/components/Header.jsx
-import React, { useState, useEffect } from "react"; // Import useEffect from react
-import { useNavigate } from "react-router-dom"; // Only import navigation-related hooks from react-router-dom
-import SearchBar from "../components/SearchBar";
-
+import { useNavigate } from 'react-router-dom';
+import SearchBar from '../components/SearchBar';
 function Header() {
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Initial user load
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-
-    // Listen for user updates
-    const handleUserUpdate = () => {
-      const updatedUser = localStorage.getItem("user");
-      if (updatedUser) {
-        setUser(JSON.parse(updatedUser));
-      }
-    };
-
-    window.addEventListener("userUpdated", handleUserUpdate);
-    return () => window.removeEventListener("userUpdated", handleUserUpdate);
-  }, []);
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/about");
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/about');
   };
 
   return (
@@ -39,34 +18,25 @@ function Header() {
         <img src="public/images/LOGO (1).png" alt="PassanGo" />
         <h1>PassanGo</h1>
       </div>
-      <SearchBar />
+      <SearchBar/>
       <nav>
         <ul>
           {user ? (
             <>
               <li>
-                <a href="/inside" className="Header_a">
+                <a href="#" onClick={() => navigate('/inside')} className='Header_a'>
                   Home
                 </a>
               </li>
               <li>
-                <a href="/create" className="Header_a">
+                <a href="#" onClick={() => navigate('/create')} className='Header_a'>
                   Create
                 </a>
               </li>
               <li>
-                <div className="user-profile">
-                  <img
-                    src={
-                      user.avatar?.data
-                        ? `data:${user.avatar.contentType};base64,${user.avatar.data}`
-                        : "/images/default_avatar.png"
-                    }
-                    alt="User Avatar"
-                    className="header-avatar"
-                    onClick={() => navigate("/profile")}
-                  />
-                </div>
+                <a href="#" onClick={() => navigate('/profile')} className='Header_a'>
+                  Profile
+                </a>
               </li>
               <li>
                 <a href="#" onClick={handleLogout}>
@@ -77,17 +47,17 @@ function Header() {
           ) : (
             <>
               <li>
-                <a href="/" className="Header_a">
+                <a href="#" onClick={() => navigate('/')} className='Header_a'>
                   Home
                 </a>
               </li>
               <li>
-                <a href="/login" className="Header_a">
+                <a href="/login" onClick={() => navigate('/login')} className='Header_a'>
                   Log In
                 </a>
               </li>
               <li>
-                <a href="/signup" className="Header_a">
+                <a href="/signup" onClick={() => navigate('/signup')} className='Header_a'>
                   Sign Up
                 </a>
               </li>
