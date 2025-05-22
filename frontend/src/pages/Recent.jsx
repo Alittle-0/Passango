@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 function Recent() {
   const [songs, setSongs] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,7 +66,7 @@ function Recent() {
   if (loading) {
     return (
       <div className="container_recent">
-        <div className="loading-state">
+        <div className="loadingstate_recent">
           <h2>Loading...</h2>
         </div>
       </div>
@@ -76,7 +76,7 @@ function Recent() {
   if (error) {
     return (
       <div className="container_recent">
-        <div className="error-state">
+        <div className="errorstate_recent">
           <h2>Error: {error}</h2>
         </div>
       </div>
@@ -85,21 +85,24 @@ function Recent() {
 
   return (
     <div className="container_recent">
-      {/*<Header />*/}
-      <main className="recent-content">
-        <h1>Recent Songs</h1>
-        <div className="songs-grid">
+ 
+      <main className="recentcontent_recent">
+        <div className="headersection_recent">
+          <h1>Recent Songs</h1>
+          <button className="backbutton_recent" onClick={() => navigate("/profile")}>Back to Main</button> {/* ADDED: Button to navigate to main page */}
+        </div>
+        <div className="songsgrid_recent">
           {songs.map((song) => (
-            <div key={song._id} className="song-card" onClick={() => handleSongClick(song._id)}>
-              <div className="song-info">
+            <section key={song._id} className="songcard_recent" onClick={() => handleSongClick(song._id)}>
+              <div className="songinfo_recent">
                 <h3>{song.song}</h3>
                 <p>{song.artist}</p>
               </div>
-            </div>
+            </section>
           ))}
         </div>
       </main>
-      {/*<Footer />*/}
+
     </div>
   );
 }

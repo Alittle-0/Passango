@@ -1,5 +1,5 @@
 // src/styles/template.scss
-//Phi Hung fucks up
+//KHang fucks up
 
 
 
@@ -43,7 +43,8 @@
 }
 
 .chord-content {
-  background: white;
+  background: rgb(239, 237, 237);  
+  width: 100px;;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -90,7 +91,7 @@
   // Left section - Chords
   .chord-section {
     width: 40%;
-    min-width: 400px;
+    min-width: 500px;
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -100,16 +101,51 @@
     .chord-display {
       flex: 1;
       text-align: center;
+      display: grid;
+      justify-content: center;
       padding: 20px;
-      background-color: #f5f5f5;
+      background-color: #000000;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      .chord-info{
+        padding-left: 10%;
+        align-self: baseline;
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        .tempo-info{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          button {
+            padding: 8px 16px;
+            margin: 5px 0;
+            background-color: #ff6200;
+            color: #121212;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
 
+            &:hover {
+              background-color: #e05500;
+              transform: scale(1.05);
+            }
+
+            &:active {
+              transform: scale(0.95);
+            }
+          }
+        }
+      }
       .chord-progression {
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 20px;
+        align-self:baseline;
         padding: 20px;
         perspective: 1000px;
       }
@@ -232,6 +268,12 @@
       min-width: unset;
       border-right: none;
       border-bottom: 1px solid #2a2a2a;
+      .chord-display{
+        .chord-info{
+          align-self: center;
+          justify-content: center;
+        }
+      }
     }
 
     .lyrics-container {

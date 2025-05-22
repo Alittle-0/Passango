@@ -1,98 +1,238 @@
 .container_recent {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    
-    .loading-state,
-    .error-state {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        h2 {
-            color: #666;
-        }
-    }
-
-    .recent-content {
-        flex: 1;
-        padding: 2rem;
-
-        h1 {
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .songs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 1rem;
-        }
-
-        .song-card {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.2s ease;
-
-            &:hover {
-                transform: translateY(-5px);
-            }
-
-            .song-image {
-                width: 100%;
-                height: 200px;
-                overflow: hidden;
-
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
-
-                .no-cover {
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    background: #f0f0f0;
-                    color: #666;
-                }
-            }
-
-            .song-info {
-                padding: 1rem;
-
-                h3 {
-                    margin: 0 0 0.5rem;
-                    font-size: 1.2rem;
-                }
-
-                p {
-                    margin: 0.25rem 0;
-                    color: #666;
-                }
-
-                audio {
-                    width: 100%;
-                    margin-top: 1rem;
-                }
-            }
-        }
-    }
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(180deg, rgb(30, 30, 30) 0%, #1a1a1a 100%); // Dark gradient from forget.scss
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
-@media (max-width: 768px) {
-    .container_recent {
-        .recent-content {
-            padding: 1rem;
+.recentcontent_recent {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e6f3ff 100%); // Gradient with light gray and soft blue
+  width: 90%;
+  max-width: 1000px;
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid #ccc; // Gray border from forget.scss
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  min-height: 80vh;
+  position: relative;
+}
 
-            .songs-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+.headersection_recent {
+  text-align: center;
+  margin-bottom: 40px;
+
+  h1 {
+    font-size: 28px; // Matches forget.scss h2
+    font-weight: bold;
+    color: #000; // Black text from forget.scss
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 5px rgba(255, 98, 0, 0.4); // Orange glow
+    margin-bottom: 20px;
+  }
+
+  .backbutton_recent {
+    background-color: #000; // Black from forget.scss
+    color: #ffffff; // White from forget.scss
+    border: 2px solid #ff6200; // Orange from forget.scss
+    border-radius: 50px; // Pill shape from forget.scss
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &:hover {
+      background-color: gray; // Gray hover from forget.scss
+      color: #000; // Black text on hover
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255, 98, 0, 0.5); // Orange glow
     }
+  }
+}
+
+.songsgrid_recent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 300px); // Fixed width for equal-sized cards
+  gap: 20px;
+  max-height: 65vh; // Scrollable height
+  overflow-y: auto;
+  width: 100%;
+  padding: 10px;
+  justify-content: center;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #e6f3ff; // Soft blue
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #ff6200; // Orange from forget.scss
+    border-radius: 4px;
+  }
+
+  // Divider between cards
+  .songcard_recent:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ccc, transparent); // Gray divider
+  }
+}
+
+.songcard_recent {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(230, 243, 255, 0.7)); // Glassmorphism
+  backdrop-filter: blur(10px);
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid #ccc; // Gray border from forget.scss
+  width: 300px; // Fixed width
+  height: 150px; // Fixed height
+  cursor: pointer;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transform: perspective(1000px) rotateY(0deg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease-out;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    border-color: #ff6200; // Orange from forget.scss
+    transform: perspective(1000px) rotateY(3deg) translateY(-5px);
+    box-shadow: 0 10px 25px rgba(255, 98, 0, 0.4);
+  }
+
+  .songinfo_recent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding-left: 30px; // Space for icon
+
+    // Music note icon
+    &::before {
+      content: "♪";
+      font-size: 20px;
+      color: #ff6200; // Orange from forget.scss
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    h3 {
+      font-size: 18px; // Matches forget.scss
+      font-weight: 500;
+      color: #333; // Dark text from forget.scss
+      margin: 0;
+      transition: text-shadow 0.3s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:hover {
+        text-shadow: 0 0 10px rgba(255, 98, 0, 0.6); // Orange glow
+      }
+    }
+
+    p {
+      font-size: 14px; // Matches forget.scss
+      color: #999; // Gray from forget.scss
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .duration {
+      font-size: 12px;
+      color: #cc4e00; // Darker orange
+      margin: 0;
+    }
+  }
+}
+
+.loadingstate_recent,
+.errorstate_recent {
+  text-align: center;
+  padding: 30px;
+  color: #ffffff; // White from forget.scss
+  background: rgb(30, 30, 30); // Dark from forget.scss
+  border-radius: 8px;
+  animation: pulse 2.5s infinite ease-in-out;
+  width: 300px; // Match song card width
+  height: 150px; // Match song card height
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 98, 0, 0.5); // Orange
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(255, 165, 0, 0.3); // Yellow-orange
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 98, 0, 0.5);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .container_recent {
+    padding: 10px;
+  }
+
+  .recentcontent_recent {
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .songsgrid_recent {
+    grid-template-columns: 1fr; // Single column
+    max-height: 70vh;
+  }
+
+  .songcard_recent {
+    width: 300px; // Maintain fixed width
+    height: 150px; // Maintain fixed height
+    transform: perspective(1000px) rotateY(0deg);
+    &:hover {
+      transform: perspective(1000px) rotateY(2deg) translateY(-3px);
+    }
+  }
 }
