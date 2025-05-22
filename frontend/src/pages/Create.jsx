@@ -66,8 +66,7 @@ function Create() {
       const formData = new FormData();
       formData.append("audio", file, file.name);
       formData.append("song", song);
-
-      const token = localStorage.getItem("token");
+      
       const response = await fetch(
         "http://localhost:3000/api/audio/upload-audio",
         {

@@ -89,6 +89,19 @@ router.post('/upload-audio', upload.single('audio'), async (req, res) => {
       key: chord_data.results.key
     };
 
+    // Check for existing song/artist combination
+    const existingAudio = await Audio.findOne({ 
+      song: lyric_data.song,
+      artist: lyric_data.artist
+    });
+
+    if (existingAudio) {
+      return res.status(200).json({
+        ...responseData,
+        _id: audioDoc._id
+      });
+    }
+
     // Save to MongoDB
     const audioDoc = new Audio(responseData);
     await audioDoc.save();
@@ -100,6 +113,16 @@ router.post('/upload-audio', upload.single('audio'), async (req, res) => {
     });
   } catch (error) {
     console.error('Error uploading audio:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+router.get('/songs', async (req, res) => {
+  try {
+    const songs = await Audio.find({}, 'song artist -_id');
+    res.status(200).json(songs);
+  } catch (error) {
+    console.error('Error fetching songs:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
