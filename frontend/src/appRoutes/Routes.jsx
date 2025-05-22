@@ -13,6 +13,8 @@ import Lyric from '../pages/Lyric';
 import Template from '../pages/Template';
 import Loading from '../pages/Loading';
 import VerificationPopup from '../components/VerificationPopup';
+import Recent from '../pages/Recent'; // Import the Recent component
+
 function AppRoutes() {
   return (
     <Routes>
@@ -29,6 +31,7 @@ function AppRoutes() {
       <Route path="/template" element={<Template />} />
       <Route path="/loading" element={<Loading />} />
       <Route path="/verification-popup" element={<VerificationPopup />} />
+      <Route path="/recent" element={<Recent />} /> {/* Add the Recent route */}
       {/* Add more routes as needed */}
     </Routes>
   );

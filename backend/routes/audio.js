@@ -119,7 +119,7 @@ router.post('/upload-audio', upload.single('audio'), async (req, res) => {
 
 router.get('/songs', async (req, res) => {
   try {
-    const songs = await Audio.find({}, 'song artist -_id');
+    const songs = await Audio.find({}, 'song artist _id');
     res.status(200).json(songs);
   } catch (error) {
     console.error('Error fetching songs:', error);

@@ -96,9 +96,9 @@ function Profile() {
             <img src="/images/pen_icon.png" className="img_profile" alt="Edit Icon" />
             <p>Edit profile</p>
           </div>
-          <div className="Playlists_profile">
+          <div className="Playlists_profile" >  
             <img src="/images/list_icon.png" className="img_profile" alt="Playlists Icon" />
-            <p>Recent playlists</p>
+            <p onclick= {() => navigate('/recent')}>Recent playlists</p>
           </div>
           {user && (
             <Modal 
