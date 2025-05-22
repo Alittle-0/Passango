@@ -103,7 +103,10 @@ router.post('/login', async (req, res) => {
     console.log('Login successful for user:', email);
     res.status(200).json({
       token,
-      user: { email: user.email },
+      user: { email: user.email,
+        username: user.username,
+        avatar: user.avatar,
+       },
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -264,9 +267,15 @@ router.post('/upload-avatar', authMiddleware, upload.single('avatar'), async (re
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    
+    // Convert buffer to base64
+    const avatarBase64 = req.file.buffer.toString('base64');
 
     // Update user's avatar field with the filename
-    user.avatar = req.file.filename;
+    user.avatar = {
+      data: avatarBase64,
+      contentType: req.file.mimetype
+    };
     await user.save();
 
     res.status(200).json({ 
