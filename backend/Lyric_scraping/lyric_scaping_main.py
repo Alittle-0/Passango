@@ -1,16 +1,8 @@
-from Lyric_scraping.scrape_lyric import Lyric
-from Lyric_scraping.find import find_artist_by_song
 from flask import request, jsonify
+from Lyric_scraping.find_artist import find_artist_by_song
+from Lyric_scraping.process import process_AZlyric
+from Lyric_scraping.backup import backup_lyrics
 
-def main(song_title: str) -> tuple[str, str, str]:
-    artist, song = find_artist_by_song(song_title)
-    
-    if artist and song:  # Only proceed if artist and song are non-empty
-        service = Lyric(artist, song)
-        lyric = service.scrape()
-        return (artist, song, lyric)
-    else:
-        return ("", "", "")
 
 def lyrics_routes(app):
     @app.route('/api/get-lyrics', methods=['POST'])
@@ -22,17 +14,22 @@ def lyrics_routes(app):
             if not song_title:
                 return jsonify({'error': 'Song title is required'}), 400
 
+            # Find the artist and song using the provided title
+            artist, song = find_artist_by_song(song_title)
+            if not artist or not song:
+                return jsonify({'error': 'Artist or song not found'}), 404
+            
             # Run the main function
-            artist, song, lyric = main(song_title)
+            lyric = process_AZlyric(song_title, artist)
             
-            # Check if no artist or song
-            if not artist:
-                return jsonify({'error': 'Artist not found'}), 404
-            
-            # Check if the scrape was successful
+            # Check if the scrape was unsuccessful
             if lyric.startswith("Error") or lyric.startswith("Failed") or lyric == "No lyric found.":
-                return jsonify({'error': lyric}), 500
+                lyric = backup_lyrics(artist, song)
 
+            # Check if the backup was unsuccessful
+            if lyric.startswith("[Errno") or lyric == "Song not found":
+                return jsonify({'error': 'Lyrics not found', lyric: str}), 404
+            
             # Return the raw lyrics directly
             return jsonify({'lyrics': lyric, 'song': song, 'artist': artist}), 200
 

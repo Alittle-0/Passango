@@ -26,9 +26,6 @@ function Login() {
         body: JSON.stringify(requestData),
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', [...response.headers.entries()]);
-
       const data = await response.json();
       console.log('Response data:', data);
 
@@ -38,10 +35,6 @@ function Login() {
 
       console.log('Storing token:', data.token);
       console.log('Storing user:', data.user);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      console.log('Navigating to /inside');
       navigate('/inside');
     } catch (err) {
       console.error('Login error:', err);

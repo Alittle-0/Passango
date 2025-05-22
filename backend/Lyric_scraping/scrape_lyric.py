@@ -14,13 +14,14 @@ class Lyric:
     """
 
     def __init__(self, artist: str, song: str):
-        self.artist = artist
-        self.song = song
+        self.artist = parse(artist)
+        self.song = parse(song)
     
     def url(self) -> str:
         """Generate the AZLyrics URL for the song."""
+        
         return "https://www.azlyrics.com/lyrics/{}/{}.html"\
-            .format(parse(self.artist), parse(self.song))
+            .format(self.artist, self.song)
             
     def scrape(self) -> str:
         """Scrape and return the lyric from AZLyrics."""

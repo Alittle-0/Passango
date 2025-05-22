@@ -57,6 +57,18 @@ header {
       text-align: center;
     }
   }
+  .header-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+  }
 
   
 }

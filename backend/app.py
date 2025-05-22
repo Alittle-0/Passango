@@ -24,5 +24,5 @@ lyrics_routes(app)
 
 if __name__ == '__main__':
     # Read PORT from .env, default to 8000 if not found
-    port = int(config.get('PYTHON_PORT', 8000))
+    port = int(config.get('PYTHON_PORT_TEST',8000))
     app.run(host='0.0.0.0', port=port, debug=True)

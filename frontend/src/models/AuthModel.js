@@ -1,3 +1,4 @@
+import jwt_decode from 'jwt-decode';
 class AuthModel {
     constructor() {
         this.baseUrl = import.meta.env.VITE_API_URL;
@@ -52,6 +53,19 @@ class AuthModel {
     getCurrentUser() {
         const user = localStorage.getItem('user');
         return user ? JSON.parse(user) : null;
+    }
+    checkTokenValidity(token) {
+        try {
+            // Decode JWT token (you'll need jwt-decode or similar)
+            const decoded = jwt_decode(token);
+            // Check if token is expired
+            if (decoded.exp * 1000 < Date.now()) {
+                return false;
+            }
+            return true;
+        } catch {
+            return false;
+        }
     }
 }
 

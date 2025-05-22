@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { validatePassword } from '../src/utils/passwordValidator.js'; 
+import { validatePassword } from '../src/utils/passwordValidator.js';
+import { getDefaultAvatar } from '../middleware/auth.js'; 
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -35,11 +36,6 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
 
-  avatar: {
-    type: String,
-    default: null,
-  },
-
   lastLogin: {
     type: Date
   },
@@ -47,6 +43,17 @@ const userSchema = new mongoose.Schema({
   loginAttempts: {
     type: Number,
     default: 0
+  },
+
+  avatar: {
+    data: {
+      type: String,
+      default: null
+    },
+    contentType: {
+      type: String,
+      default: null
+    }
   },
 
 });
@@ -87,6 +94,32 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
     return false;
   }
 };
+
+// Method to set default avatar
+userSchema.pre('save', async function(next) {
+  try {
+    // Set default avatar for new users only
+    if (this.isNew && !this.avatar.data) {
+      const defaultAvatar = await getDefaultAvatar();
+      if (defaultAvatar) {
+        this.avatar = defaultAvatar;
+      }
+    }
+
+    // Existing password hashing logic
+    if (this.isModified('password')) {
+      const validationResult = validatePassword(this.password);
+      if (!validationResult.isValid) {
+        return next(new Error(validationResult.message));
+      }
+      const salt = await bcrypt.genSalt(10);
+      this.password = await bcrypt.hash(this.password, salt);
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 const User = mongoose.model('User', userSchema);
 
