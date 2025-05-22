@@ -98,7 +98,7 @@ router.post('/upload-audio', upload.single('audio'), async (req, res) => {
     if (existingAudio) {
       return res.status(200).json({
         ...responseData,
-        _id: audioDoc._id
+        _id: existingAudio._id
       });
     }
 
@@ -123,6 +123,20 @@ router.get('/songs', async (req, res) => {
     res.status(200).json(songs);
   } catch (error) {
     console.error('Error fetching songs:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+router.get('/songs/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const songData = await Audio.findById(id);
+    if (!songData) {
+      return res.status(404).json({ message: 'Song not found' });
+    }
+    res.status(200).json(songData);
+  } catch (error) {
+    console.error('Error fetching song:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });

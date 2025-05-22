@@ -26,7 +26,6 @@ function Template() {
   const [previousChord, setPreviousChord] = useState(null);
   const [nextChord, setNextChord] = useState(null);
 
-  console.log("test");
   useEffect(() => {
     // Convert Base64 audio to Blob and create URL
     if (currentDetail.audio) {
