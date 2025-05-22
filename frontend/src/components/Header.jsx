@@ -1,32 +1,15 @@
 // src/components/Header.jsx
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
-import AuthModel from '../models/AuthModel';
-
 function Header() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(AuthModel.getCurrentUser());
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    setUser(null); // Update state immediately
     navigate('/about');
   };
-
-  useEffect(() => {
-    const checkUser = (event) => {
-      if (event.key === 'user' || !event.key) {
-        setUser(AuthModel.getCurrentUser());
-      }
-    };
-  
-    window.addEventListener('storage', checkUser);
-    return () => {
-      window.removeEventListener('storage', checkUser);
-    };
-  }, []);
 
   return (
     //Change "#"
