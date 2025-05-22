@@ -4,10 +4,75 @@ import { useLocation } from "react-router-dom";
 
 function Template() {
   const location = useLocation();
+<<<<<<< Updated upstream
   const { lyrics, song, artist, chords, tempo, key } = location.state || {};
   const [progress, setProgress] = useState(0); // Track progress for the slider
   const [isPaused, setIsPaused] = useState(false); // Track paused state for UI
   const animatorRef = useRef(null); // Store the ParagraphAnimator instance
+=======
+  const [currentDetail, setCurrentDetail] = useState(
+    location.state || {
+      lyrics: "",
+      song: "",
+      artist: "",
+      chords: [],
+      tempo: 0,
+      key: "",
+      audio: null,
+      mimetype: "",
+    }
+  );
+
+  const [semitones,setSemitones]=useState('0');
+  const currentAudio = useRef();
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [totalLength, setTotalLength] = useState("00 : 00");
+  const [currentTime, setCurrentTime] = useState("00 : 00");
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [currentChordIndex, setCurrentChordIndex] = useState(0);
+  const [previousChord, setPreviousChord] = useState(null);
+  const [nextChord, setNextChord] = useState(null);
+
+  console.log("test");
+ 
+  useEffect(() => {
+    // Convert Base64 audio to Blob and create URL
+    if (currentDetail.audio) {
+      try {
+        // Remove the Base64 prefix if present (e.g., "data:audio/mpeg;base64,")
+        const base64String = currentDetail.audio.startsWith("data:")
+          ? currentDetail.audio.split(",")[1]
+          : currentDetail.audio;
+
+        // Convert Base64 to binary
+        const binary = atob(base64String);
+        const len = binary.length;
+        const buffer = new ArrayBuffer(len);
+        const view = new Uint8Array(buffer);
+        for (let i = 0; i < len; i++) {
+          view[i] = binary.charCodeAt(i);
+        }
+
+        // Create Blob and URL
+        const blob = new Blob([view], {
+          type: currentDetail.mimetype || "audio/mpeg",
+        });
+        const url = URL.createObjectURL(blob);
+        setAudioUrl(url);
+
+        // Cleanup on unmount
+        return () => {
+          URL.revokeObjectURL(url);
+        };
+      } catch (error) {
+        console.error("Error converting Base64 to audio:", error);
+      }
+    }
+  }, [currentDetail.audio, currentDetail.mimetype]);
+
+  const chordListRef = useRef(null);
+>>>>>>> Stashed changes
 
   useEffect(() => {
     if (!lyrics) return;
@@ -218,6 +283,7 @@ function Template() {
   };
   return (
     <div className="lyric-style">
+<<<<<<< Updated upstream
       <section className="lyrics-container">
         <div className="lyric-script">
           <h1>
@@ -243,6 +309,74 @@ function Template() {
             >
               Continue
             </button>
+=======
+      <div className="main-container">
+        <div className="chord-section">
+          <div className="chord-display">
+            <div className="chord-info">
+              <h2>Key: {currentDetail.key}</h2>
+              <div className="tempo-info">
+                <button value='-' onClick={handleSemitonesChange}>-</button>
+                {semitones}
+                <button value='+' onClick={handleSemitonesChange}>+</button>
+              </div>
+            </div>
+            <div className="chord-progression">
+              {/* Previous Chord */}
+              <div className="chord-slot previous">
+                {previousChord && (
+                  <div className="chord-content">
+                    
+                    <div className="chord-name">{previousChord.chord}</div>
+                  </div>
+                )}
+              </div>
+
+              {/* Current Chord */}
+              <div className="chord-slot current">
+                {currentChordIndex >= 0 && currentDetail.chords && (
+                  <div className="chord-content">
+                    
+                    <div className="chord-name">
+                      {currentDetail.chords[currentChordIndex].chord}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Next Chord */}
+              <div className="chord-slot next">
+                {nextChord && (
+                  <div className="chord-content">
+                    
+                    <div className="chord-name">{nextChord.chord}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="playback-section">
+            <div className="playback-controls">
+              <button onClick={handleReplay} className="replay-btn">
+                Replay
+              </button>
+              <button onClick={handleAudioPlay} className="continue-btn">
+                {isAudioPlaying ? "Pause" : "Play"}
+              </button>
+            </div>
+            <div className="musicTimer">
+              <p className="currentTime">{currentTime}</p>
+              <p className="totalTime">{totalLength}</p>
+            </div>
+            <input
+              type="range"
+              name="musicProgressBar"
+              className="musicProgressBar"
+              value={audioProgress}
+              onChange={handleMusicProgressBar}
+            />
+>>>>>>> Stashed changes
           </div>
           <input
             type="range"
