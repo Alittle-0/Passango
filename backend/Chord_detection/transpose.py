@@ -6,7 +6,7 @@ def get_semitone_input():
         """
         while True:
             try:
-                semitones = int(input("Enter the number of semitones to transpose the chords (e.g., +2 or -2): "))
+                semitones = 0 #int(input("Enter the number of semitones to transpose the chords (e.g., +2 or -2): "))
                 return semitones
             except ValueError:
                 print("Invalid input. Please enter an integer value.")
