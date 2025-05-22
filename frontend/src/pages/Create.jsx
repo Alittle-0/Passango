@@ -13,8 +13,16 @@ function Create() {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    console.log("Selected file:", selectedFile);
-    setFile(selectedFile);
+    console.log("Selected file:", selectedFile); // Debug selected file
+    const validTypes = ["audio/wav", "audio/mp3", "audio/mpeg"];
+    if (selectedFile && validTypes.includes(selectedFile.type)) {
+      console.log("File type:", selectedFile.type);
+      setFile(selectedFile);
+      setError("");
+    } else {
+      setFile(null);
+      setError("Please select a valid MP3 or WAV file");
+    }
   };
 
   const handleDragOver = (e) => {
@@ -30,6 +38,7 @@ function Create() {
       droppedFile &&
       (droppedFile.type === "audio/mp3" || droppedFile.type === "audio/wav")
     ) {
+      console.log("Dropped file MIME type:", droppedFile.type);
       console.log("Dropped file:", droppedFile);
       setFile(droppedFile);
     } else {
@@ -45,7 +54,7 @@ function Create() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true); // Show loading component
+    setIsLoading(true);
 
     if (!file || !(file.type === "audio/mpeg" || file.type === "audio/wav")) {
       setError("Please upload a valid MP3 or WAV file");
@@ -53,58 +62,36 @@ function Create() {
       return;
     }
 
-    console.log(file);
-    const formData = new FormData();
-    formData.append("audio", file);
-
     try {
-      const chord_response = await fetch(
-        "http://localhost:8000/api/get-chord",
+      const formData = new FormData();
+      formData.append("audio", file, file.name);
+      formData.append("song", song);
+
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:3000/api/audio/upload-audio",
         {
           method: "POST",
           body: formData,
         }
       );
-
-      const lyric_response = await fetch(
-        "http://localhost:8000/api/get-lyrics",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ song }),
-        }
-      );
-
-      const lyric_data = await lyric_response.json();
-      const chord_data = await chord_response.json();
-
-      if (lyric_response.ok && chord_response.ok) {
-        navigate("/template", {
-          state: {
-            lyrics: lyric_data.lyrics,
-            song: lyric_data.song,
-            artist: lyric_data.artist,
-            chords: chord_data.results.chords,
-            tempo: chord_data.results.tempo,
-            key: chord_data.results.key,
-          },
-        });
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Upload successful:", data);
+        // Navigate to Template.jsx and pass the response data
+        navigate("/template", { state: data });
       } else {
-        setError(
-          lyric_data.error || chord_data.error || "Failed to fetch lyrics"
-        );
+        console.error("Upload failed:", data);
+        setError(data.message || "Failed to upload audio");
       }
     } catch (error) {
       setError("Error connecting to the server");
       console.log(error);
     } finally {
-      setIsLoading(false); // Hide loading component
+      setIsLoading(false);
     }
   };
 
-  // Render Loading component if isLoading is true
   if (isLoading) {
     return <Loading />;
   }
@@ -130,9 +117,10 @@ function Create() {
                 <label>Audio: </label>
                 <div className="custom-file-wrapper">
                   <input
+                    name="audio"
                     type="file"
                     id="audio-upload"
-                    accept="audio/mp3,audio/wav"
+                    accept="audio/mp3,audio/wav,audio/mpeg"
                     onChange={handleFileChange}
                     required
                     className={file ? "file-input-change" : ""}

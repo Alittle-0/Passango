@@ -7,8 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "concurrently \"npx kill-port 3000 && nodemon index.js\" \"cd Transcription_byPhiHung && python app.py\"",
-    "dev-node": "npx kill-port 3000 && nodemon index.js",
-    "dev-python": "cd Transcription_byPhiHung && python app.py"
+    "dev-node": "nodemon index.js"
   },
   "keywords": [],
   "author": "",

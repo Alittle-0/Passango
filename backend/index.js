@@ -6,13 +6,16 @@ console.log('EMAIL_PORT:', process.env.EMAIL_PORT);
 console.log('EMAIL_USER:', process.env.EMAIL_USER);
 console.log('EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD ? '***' : undefined);
 import express from 'express';
-import mongoose from 'mongoose';
+import connect from './config/db.js';
 import cors from 'cors';
 
 import authRoutes from './routes/auth.js';
 import audioRoutes from './routes/audio.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+
+
 
 // Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -38,8 +41,8 @@ if (!process.env.MONGO_URI) {
   process.exit(1); // Exit the process with an error code
 }
 
-const app = express();
 
+const app = express();
 // Configure CORS
 app.use(cors({
   origin: '*', // Allow all origins during development
@@ -72,11 +75,33 @@ app.get('/', (req, res) => {
   res.send('Welcome to the PassanGo Backend API! Use /api/auth or /api/audio endpoints.');
 });
 
+// Multer for file uploads
+import multer from 'multer';
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '.file')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now()
+    cb(null, uniqueSuffix.file.originalname)
+  }
+})
+
+const upload = multer({ storage: storage })
+
+app.post('upload-audio', upload.single('audio'), async (req, res) => {
+  try {
+    console.log('File uploaded:', req.file);
+    res.json({ message: 'File uploaded successfully', file: req.file });
+  } catch (error) {
+    console.error('Error processing file:', error);
+    return res.status(500).json({ message: 'Error processing file' });
+  }
+});
+
 // Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI) // Remove deprecated options
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+connect();
 
 // Start the server
 const PORT = process.env.NODE_PORT || 3000;

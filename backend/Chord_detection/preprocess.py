@@ -2,10 +2,9 @@ from io import BytesIO
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QTimer
 from Chord_detection.function import DeChordCLI
-from Chord_detection.transpose import get_semitone_input
 import sys
 
-def process_audio(audio_data: BytesIO, filename: str = "temp_audio.wav"):
+def process_audio(audio_data: BytesIO):
     """
     Process audio data from a BytesIO object.
     
@@ -24,11 +23,10 @@ def process_audio(audio_data: BytesIO, filename: str = "temp_audio.wav"):
 
     try:
         # Preprocess the audio (converts to WAV if needed)
-        dechord.preprocess_audio(audio_data, filename)
-        semitones = get_semitone_input()
+        dechord.preprocess_audio(audio_data)
         
         # Load and process the audio
-        dechord.load_audio(semitones)
+        dechord.load_audio()
         
         # Use QTimer to delay result collection until processing is complete
         results = None
@@ -38,10 +36,13 @@ def process_audio(audio_data: BytesIO, filename: str = "temp_audio.wav"):
             app.quit()
 
         # Schedule result collection
-        QTimer.singleShot(100, collect_results)
+        QTimer.singleShot(1000, collect_results)
         
         # Run the Qt event loop
         app.exec_()
+        
+        if not results or not results.get('chords'):
+            print("Warning: No chords detected in the audio")
         
         return results
     except Exception as e:
