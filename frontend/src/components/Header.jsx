@@ -1,41 +1,68 @@
 // src/components/Header.jsx
-import { useNavigate } from 'react-router-dom';
-import SearchBar from '../components/SearchBar';
+import { useNavigate } from "react-router-dom";
+import SearchBar from "../components/SearchBar";
+import AuthModel from '../models/AuthModel';
+
 function Header() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/about');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/about");
+  };
+
+  const getAvatarUrl = () => {
+    return AuthModel.getAvatarUrl();
   };
 
   return (
-    //Change "#"
     <header>
       <div className="logo_header">
         <img src="public/images/LOGO (1).png" alt="PassanGo" />
         <h1>PassanGo</h1>
       </div>
-      <SearchBar/>
+      <SearchBar />
       <nav>
         <ul>
           {user ? (
             <>
               <li>
-                <a href="#" onClick={() => navigate('/inside')} className='Header_a'>
+                <a
+                  href="#"
+                  onClick={() => navigate("/inside")}
+                  className="Header_a"
+                >
                   Home
                 </a>
               </li>
               <li>
-                <a href="#" onClick={() => navigate('/create')} className='Header_a'>
+                <a
+                  href="#"
+                  onClick={() => navigate("/create")}
+                  className="Header_a"
+                >
                   Create
                 </a>
               </li>
               <li>
-                <a href="#" onClick={() => navigate('/profile')} className='Header_a'>
-                  Profile
+                <a
+                  href="#"
+                  onClick={() => navigate("/profile")}
+                  className="Header_a"
+                >
+                  <img
+                    src={getAvatarUrl()}
+                    alt="Profile"
+                    className="header-avatar"
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  />
                 </a>
               </li>
               <li>
@@ -47,17 +74,25 @@ function Header() {
           ) : (
             <>
               <li>
-                <a href="#" onClick={() => navigate('/')} className='Header_a'>
+                <a href="#" onClick={() => navigate("/")} className="Header_a">
                   Home
                 </a>
               </li>
               <li>
-                <a href="/login" onClick={() => navigate('/login')} className='Header_a'>
+                <a
+                  href="/login"
+                  onClick={() => navigate("/login")}
+                  className="Header_a"
+                >
                   Log In
                 </a>
               </li>
               <li>
-                <a href="/signup" onClick={() => navigate('/signup')} className='Header_a'>
+                <a
+                  href="/signup"
+                  onClick={() => navigate("/signup")}
+                  className="Header_a"
+                >
                   Sign Up
                 </a>
               </li>

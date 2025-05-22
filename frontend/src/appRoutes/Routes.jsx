@@ -9,7 +9,6 @@ import Create from '../pages/Create';
 import Profile from '../pages/Profile';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
-import Lyric from '../pages/Lyric';
 import Template from '../pages/Template';
 import Loading from '../pages/Loading';
 import VerificationPopup from '../components/VerificationPopup';
@@ -27,7 +26,6 @@ function AppRoutes() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/lyric" element={<Lyric />} />
       <Route path="/template" element={<Template />} />
       <Route path="/loading" element={<Loading />} />
       <Route path="/verification-popup" element={<VerificationPopup />} />
