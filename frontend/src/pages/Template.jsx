@@ -1,6 +1,7 @@
 // src/pages/Template.jsx
 import React, { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { transposeChords } from "../utils/transpose";
 
 function Template() {
   const [semiTones, setSemiTones] = useState(0);
@@ -17,6 +18,7 @@ function Template() {
       mimetype: "",
     }
   );
+  const [originalChords] = useState(currentDetail.chords);
   const currentAudio = useRef();
   const [audioProgress, setAudioProgress] = useState(0);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -26,7 +28,9 @@ function Template() {
   const [currentChordIndex, setCurrentChordIndex] = useState(-1);
   const [previousChord, setPreviousChord] = useState(null);
   const [nextChord, setNextChord] = useState(null);
+  const navigate = useNavigate();
 
+  console.log("test");
   useEffect(() => {
     // Convert Base64 audio to Blob and create URL
     if (currentDetail.audio) {
@@ -186,23 +190,35 @@ function Template() {
     return <div>No lyrics found. Please go back and try again.</div>;
   }
   // Handle semitones change
-   const handleSemitonesChange = (e) => {
-    if (semiTones>=10||semiTones<=-10){
-      if (e.target.value === "+"&& semiTones===-10) {
-        setSemiTones(-9);
-      }
-      else if (e.target.value === "-"&& semiTones===10) {
-        setSemiTones(9);
-      }
-      else{alert("Please select a value between -10 and 10");}
+  const handleSemitonesChange = (e) => {
+    const MIN_SEMITONES = -10;
+    const MAX_SEMITONES = 10;
+    const newValue = e.target.value === "+" ? semiTones + 1 : semiTones - 1;
 
-      return;
-    }
-    if (e.target.value === "+") {
-      setSemiTones((prev) => parseInt(prev) + 1);
-    }
-    if (e.target.value === "-") {
-      setSemiTones((prev) => parseInt(prev) - 1);
+    // Check if new value is within allowed range
+    if (newValue >= MIN_SEMITONES && newValue <= MAX_SEMITONES) {
+      setSemiTones(newValue);
+
+      // Transpose all chords
+      const transposedChords = transposeChords(originalChords, newValue);
+      setCurrentDetail((prev) => ({
+        ...prev,
+        chords: transposedChords,
+      }));
+
+      // Update previous and next chords if they exist
+      if (currentChordIndex >= 0) {
+        setPreviousChord(
+          currentChordIndex > 0 ? transposedChords[currentChordIndex - 1] : null
+        );
+        setNextChord(
+          currentChordIndex < transposedChords.length - 1
+            ? transposedChords[currentChordIndex + 1]
+            : null
+        );
+      }
+    } else {
+      alert(`Semitones must be between ${MIN_SEMITONES} and ${MAX_SEMITONES}`);
     }
   };
 
@@ -212,17 +228,22 @@ function Template() {
         <div className="chord-section">
           <div className="chord-display">
             <div className="chord-info">
+              <p onClick={() => navigate("/create")}>Return</p>
               <h2>Key: {currentDetail.key}</h2>
               <div className="tempo-info">
-                <button value='-' onClick={handleSemitonesChange}>-</button>
+                <button value="-" onClick={handleSemitonesChange}>
+                  -
+                </button>
                 {semiTones}
-                <button value='+' onClick={handleSemitonesChange}>+</button>
+                <button value="+" onClick={handleSemitonesChange}>
+                  +
+                </button>
               </div>
             </div>
             <div className="chord-progression">
               {/* Previous Chord */}
               <div className="chord-slot previous">
-                {previousChord && (
+                {previousChord && previousChord.chord !== "N" && (
                   <div className="chord-content">
                     <div className="chord-name">{previousChord.chord}</div>
                   </div>
@@ -231,18 +252,20 @@ function Template() {
 
               {/* Current Chord */}
               <div className="chord-slot current">
-                {currentChordIndex >= 0 && currentDetail.chords && (
-                  <div className="chord-content">
-                    <div className="chord-name">
-                      {currentDetail.chords[currentChordIndex].chord}
+                {currentChordIndex >= 0 &&
+                  currentDetail.chords &&
+                  currentDetail.chords[currentChordIndex].chord !== "N" && (
+                    <div className="chord-content">
+                      <div className="chord-name">
+                        {currentDetail.chords[currentChordIndex].chord}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
 
               {/* Next Chord */}
               <div className="chord-slot next">
-                {nextChord && (
+                {nextChord && nextChord.chord !== "N" && (
                   <div className="chord-content">
                     <div className="chord-name">{nextChord.chord}</div>
                   </div>

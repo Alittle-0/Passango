@@ -1,7 +1,7 @@
 // src/components/Header.jsx
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import AuthModel from '../models/AuthModel';
+import AuthModel from "../utils/AuthModel";
 
 function Header() {
   const navigate = useNavigate();

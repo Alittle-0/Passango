@@ -1,6 +1,6 @@
 // src/components/Modal.jsx
 import React, { useEffect, useState } from "react";
-import AuthModel from "../models/AuthModel";
+import AuthModel from "../utils/AuthModel";
 
 function Modal({ isOpen, onClose, title, user, setUser }) {
   //popup form

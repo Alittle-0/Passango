@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Modal from "../components/Modal";
-import AuthModel from "../models/AuthModel";
+import AuthModel from "../utils/AuthModel";
 
 function Profile() {
   const navigate = useNavigate();
@@ -67,8 +67,8 @@ function Profile() {
           {user && (
             <img
               src={
-                user.avatar?.data?
-                  `data:${user.avatar.contentType};base64,${user.avatar.data}`
+                user.avatar?.data
+                  ? `data:${user.avatar.contentType};base64,${user.avatar.data}`
                   : "/images/default_avt.jpg"
               }
               className="profile_logo"

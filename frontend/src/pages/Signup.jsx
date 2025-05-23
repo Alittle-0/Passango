@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'; // Added for animations
-import AuthModel from '../models/AuthModel';
+import AuthModel from '../utils/AuthModel';
 
 function Signup() {
   const navigate = useNavigate();
