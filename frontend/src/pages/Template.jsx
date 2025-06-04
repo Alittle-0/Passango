@@ -121,6 +121,8 @@ function Template() {
       setCurrentTime("00 : 00");
       await currentAudio.current.play();
       setIsAudioPlaying(true);
+      setPreviousChord(null);
+      setNextChord(null);
     } catch (error) {
       console.error("Error replaying audio:", error);
       setIsAudioPlaying(false);
@@ -228,7 +230,6 @@ function Template() {
         <div className="chord-section">
           <div className="chord-display">
             <div className="chord-info">
-              <p onClick={() => navigate("/create")}>Return</p>
               <h2>Key: {currentDetail.key}</h2>
               <div className="tempo-info">
                 <button value="-" onClick={handleSemitonesChange}>
@@ -311,6 +312,7 @@ function Template() {
             </h1>
             <p>{currentDetail.lyrics}</p>
           </div>
+          <button onClick={() => navigate("/create")}>Return</button>
         </section>
       </div>
     </div>
