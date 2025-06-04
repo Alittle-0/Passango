@@ -13,6 +13,7 @@ import Template from '../pages/Template';
 import Loading from '../pages/Loading';
 import VerificationPopup from '../components/VerificationPopup';
 import Recent from '../pages/Recent'; // Import the Recent component
+import Featured from '../components/Featured';
 
 function AppRoutes() {
   return (
@@ -30,6 +31,7 @@ function AppRoutes() {
       <Route path="/loading" element={<Loading />} />
       <Route path="/verification-popup" element={<VerificationPopup />} />
       <Route path="/recent" element={<Recent />} /> {/* Add the Recent route */}
+      <Route path="/featured" element={<Featured />} /> {/* Add the Featured route */}
       {/* Add more routes as needed */}
     </Routes>
   );

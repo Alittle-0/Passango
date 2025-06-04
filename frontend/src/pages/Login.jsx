@@ -67,7 +67,7 @@ function Login() {
             {error && (
               <p style={{ color: "red", textAlign: "center" }}>{error}</p>
             )}
-            <label htmlFor="email">Email/Name</label>
+            <label htmlFor="email">Email</label>
             <input
               type="text"
               id="email"

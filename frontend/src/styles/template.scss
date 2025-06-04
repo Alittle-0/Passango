@@ -1,8 +1,6 @@
 // src/styles/template.scss
 //KHang fucks up
 
-
-
 .chord-timing {
   margin-bottom: 8px;
   font-size: 0.8em;
@@ -20,31 +18,67 @@
   }
 }
 
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideChord {
+  0% {
+    transform: translateX(150px) scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(-50%) scale(1.2);
+    opacity: 1;
+  }
+}
+
 .chord-slot {
-  flex: 1;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 200px;
   text-align: center;
   padding: 15px;
   transition: all 0.3s ease;
 }
 
+.chord-slot.hidden {
+  display: none;
+}
+
 .chord-slot.previous {
+  left: -50%;
+  transform: translateX(0) scale(0.8);
   opacity: 0.5;
-  transform: scale(0.8);
+  animation: slideChord 0.3s ease-out reverse forwards;
 }
 
 .chord-slot.current {
-  transform: scale(1.2);
+  left: 50%;
+  transform: translateX(0) scale(1.2);
   z-index: 2;
+  opacity: 1;
+  animation: slideChord 0.3s ease-out forwards;
 }
 
 .chord-slot.next {
+  left: 62%;
+  transform: translateX(0) scale(0.8);
   opacity: 0.5;
-  transform: scale(0.8);
 }
 
 .chord-content {
-  background: rgb(239, 237, 237);  
-  width: 100px;;
+  background: rgb(239, 237, 237);
+  width: 125px;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -56,21 +90,9 @@
   font-weight: bold;
   margin-top: 5px;
   font-size: 2.5em;
-  font-weight: bold;
   color: #333;
   transition: all 0.3s ease;
   animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 
 .lyric-style {
@@ -84,9 +106,13 @@
 
   .main-container {
     display: flex;
-    width: 100%;
-    height: 100%;
+    min-width: 100%;
+    min-height: 100vh;
+    @media (max-height: 100vh) {
+      overflow-y: auto; // Use 'auto' to show scrollbar only when content overflows
+      overflow-x: hidden; // Ensure no horizontal scrollbar
   }
+}
 
   // Left section - Chords
   .chord-section {
@@ -99,6 +125,7 @@
     border-right: 1px solid #2a2a2a;
 
     .chord-display {
+      width: 100%;
       flex: 1;
       text-align: center;
       display: grid;
@@ -107,13 +134,14 @@
       background-color: #000000;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      .chord-info{
-        padding-left: 10%;
+      position: relative;
+      .chord-info {
+        padding-left: 20px;
         align-self: baseline;
         display: flex;
         flex-direction: column;
         width: 200px;
-        .tempo-info{
+        .tempo-info {
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -141,20 +169,25 @@
         }
       }
       .chord-progression {
+        flex:1;
+        min-height: 50vh;
         display: flex;
         justify-content: center;
         align-items: center;
+        width: 100%;
         gap: 20px;
-        align-self:baseline;
+        align-self: baseline;
         padding: 20px;
-        perspective: 1000px;
+        position: relative;
+        min-height: 150px;
+        min-width: 400px;
       }
     }
 
     .playback-section {
       margin-top: auto;
       padding: 20px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 205, 205, 0.05);
       border-radius: 10px;
 
       .musicTimer {
@@ -201,17 +234,37 @@
   // Right section - Lyrics
   .lyrics-container {
     flex: 1;
-    height: 100%;
+    min-height:50vh;
     overflow-y: auto;
     padding: 20px;
-
+    button{
+      align-self: center;
+      margin-top:50px;
+      background-color: #000; 
+      color: #ffffff; 
+      border: 2px solid #ff6200; 
+      border-radius: 50px; 
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      &:hover {
+        background-color: gray;
+        color: #000; 
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(255, 98, 0, 0.5); 
+      }
+    }
     .sentence {
       display: block;
       position: absolute;
       text-align: center;
       white-space: normal;
       transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-
+      
       &.exiting {
         transform: translateX(-150%);
         opacity: 0;
@@ -250,7 +303,7 @@
       p {
         line-height: 2;
         font-size: 1rem;
-        white-space: pre-line; // Preserve line breaks
+        white-space: pre-line;
       }
     }
   }
@@ -261,6 +314,7 @@
   .lyric-style {
     .main-container {
       flex-direction: column;
+      
     }
 
     .chord-section {
@@ -268,10 +322,25 @@
       min-width: unset;
       border-right: none;
       border-bottom: 1px solid #2a2a2a;
-      .chord-display{
-        .chord-info{
-          align-self: center;
-          justify-content: center;
+      .chord-display {
+        padding: 10px;
+        .chord-info {
+          padding-left:10px;
+        }
+        .chord-progression {
+          min-width: 300px;
+          .chord-slot {
+            min-width: 100px;
+          }
+          .chord-slot.previous {
+            left: -75%;
+          }
+          .chord-slot.current {
+            left: 50%;
+          }
+          .chord-slot.next {
+            left: 75%;
+          }
         }
       }
     }
@@ -292,6 +361,7 @@
           font-size: 1rem;
           line-height: 1.8;
         }
+        
       }
     }
   }

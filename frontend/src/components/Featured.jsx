@@ -1,6 +1,11 @@
 // src/components/Featured.jsx
+import { useNavigate } from "react-router-dom";
+
 function Featured({ onDiscoverClick }) {
+    const navigate = useNavigate();
+
   return (
+    
     <section className="featured">
       <h2>Featured</h2>
       <div className="feature-item">
@@ -14,7 +19,7 @@ function Featured({ onDiscoverClick }) {
         </div>
         <div className="card">
           <img src="public/images/music 2.png" alt="Headphones with waveform icon" />
-          <button onClick={onDiscoverClick} aria-label="Tab detection" >Recent playlist</button>
+          <button onClick={() => navigate("/recent")} aria-label="Tab detection" >Recent playlist</button>
         </div>
       </div>
     </section>
