@@ -4,13 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "concurrently \"cd backend && npm run dev-node\" \"cd frontend && npm run dev\" \"cd backend && npm run start-python\"",
-    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install && npm run install-python",
+    "start": "concurrently \"cd backend && npm run dev-node\" \"cd frontend && npm run dev\" \"cd backend && python app.py\"",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd .. && python -m pip install -r requirements.txt",
     "build": "cd frontend && npm run build",
     "lint": "cd frontend && npm run lint",
-    "clean": "rimraf node_modules && cd frontend && rimraf node_modules && cd ../backend && rimraf node_modules",
-    "install-python": "where python >nul 2>nul && (python -m pip install -r backend/requirements.txt) || (python3 -m pip install -r backend/requirements.txt)",
-    "run-python": "where python >nul 2>nul && (python app.py) || (python3 app.py)"
+    "clean": "rimraf node_modules && cd frontend && rimraf node_modules && cd ../backend && rimraf node_modules"
   },
   "dependencies": {
     "react": "^19.0.0",

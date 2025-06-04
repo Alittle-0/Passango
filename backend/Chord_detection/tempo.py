@@ -1,5 +1,3 @@
-import os
-import hashlib
 from PyQt5.QtCore import QThread, pyqtSignal
 from madmom.features.beats import RNNBeatProcessor
 from madmom.features.tempo import TempoEstimationProcessor
