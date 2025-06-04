@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "concurrently \"npx kill-port 3000 && nodemon index.js\" \"cd Transcription_byPhiHung && python app.py\"",
+    "dev": "concurrently \"npx kill-port 3000 && nodemon index.js\" \"cd Chord_detection && python -m pip install -r requirements.txt && python chord_main.py\"",
     "dev-node": "nodemon index.js"
   },
   "keywords": [],

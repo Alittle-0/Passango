@@ -4,16 +4,20 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "start": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install && python -m pip install -r requirements.txt",
+    "build": "cd frontend && npm run build",
+    "lint": "cd frontend && npm run lint",
+    "clean": "rimraf node_modules && cd frontend && rimraf node_modules && cd ../backend && rimraf node_modules",
+    "install-python": "python -m pip install -r requirements.txt"
   },
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.4.0",
-    "sass": "^1.86.0"
+    "sass": "^1.86.0",
+    "concurrently": "^9.1.2",
+    "rimraf": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
